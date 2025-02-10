@@ -1,0 +1,73 @@
+.dashboard {
+    height: 60px;
+    background: #A03037 0% 0% no-repeat padding-box;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+
+}
+
+.dashboard input {
+    width: 490px;
+    height: 33px;
+    background: #FCFCFC 0% 0% no-repeat padding-box;
+    border-radius: 3px;
+    opacity: 1;
+    border: none;
+    margin-right: 200px;
+    margin-left: -25px;
+    padding-left: 30px;
+}
+
+
+.dashboard img {
+    width: 31px;
+    height: 24px;
+    opacity: 1;
+    margin-left: 150px;
+    margin-right: 6px;
+}
+
+
+.dashboard span {
+    width: 91px;
+    height: 26px;
+    text-align: left;
+    font: normal normal normal 20px/26px Roboto;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    text-transform: capitalize;
+    opacity: 1;
+    margin-right: 50px
+}
+
+.profile, .cart {
+    width: 31px;
+    height: 36px;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    color: #FFFFFF;
+    margin-right: 50px
+}
+
+.dashboard svg {
+    width: 15px;
+    height: 15px;
+    opacity: 1;
+    z-index: 2;
+}
+
+.dashboard p {
+    height: 13px;
+    font: normal normal normal 10px/13px Roboto;
+    letter-spacing: 0.45px;
+    color: #FFFFFF;
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+}
+
+
