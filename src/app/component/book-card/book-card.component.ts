@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-book-card',
@@ -10,3 +10,5 @@ export class BookCardComponent {
   @Input() book: any;
 
 }
+
+

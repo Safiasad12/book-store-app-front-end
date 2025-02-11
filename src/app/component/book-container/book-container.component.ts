@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BookService } from 'src/app/service/book-service/book.service';
 
 @Component({
   selector: 'app-book-container',
@@ -7,19 +8,47 @@ import { Component } from '@angular/core';
 })
 export class BookContainerComponent {
 
-  books = [
-    { title: 'Book 1', author: 'Author 1' },
-    { title: 'Book 2', author: 'Author 2' },
-    { title: 'Book 3', author: 'Author 3' },
-    { title: 'Book 1', author: 'Author 1' },
-    { title: 'Book 2', author: 'Author 2' },
-    { title: 'Book 3', author: 'Author 3' },
-    { title: 'Book 1', author: 'Author 1' },
-    { title: 'Book 2', author: 'Author 2' },
-    { title: 'Book 3', author: 'Author 3' },
-    { title: 'Book 1', author: 'Author 1' },
-    { title: 'Book 2', author: 'Author 2' },
-    { title: 'Book 3', author: 'Author 3' },
-  ];
 
+  bookList: any[] = [];
+
+  // books = [
+  //   { title: 'Book 1', author: 'Author 1' },
+  //   { title: 'Book 2', author: 'Author 2' },
+  //   { title: 'Book 3', author: 'Author 3' },
+  //   { title: 'Book 1', author: 'Author 1' },
+  //   { title: 'Book 2', author: 'Author 2' },
+  //   { title: 'Book 3', author: 'Author 3' },
+  //   { title: 'Book 1', author: 'Author 1' },
+  //   { title: 'Book 2', author: 'Author 2' },
+  //   { title: 'Book 3', author: 'Author 3' },
+  //   { title: 'Book 1', author: 'Author 1' },
+  //   { title: 'Book 2', author: 'Author 2' },
+  //   { title: 'Book 3', author: 'Author 3' },
+  // ];
+
+  constructor(private bookService: BookService) { }
+
+  ngOnInit() {
+    
+    this.bookService.fetchAllBooksApiCall().subscribe({
+      next: (res: any) => {
+
+        console.log(res);
+
+        this.bookList=res.data.books
+
+
+        // this.bookList = res.notes.filter((note: any) => !(note.isArchive) && !(note.isTrash)).reverse()
+        // console.log(this.notesList);
+
+
+      },
+      error: (err) => {
+        console.log(err);
+
+      }
+
+    })
+  }
 }
+

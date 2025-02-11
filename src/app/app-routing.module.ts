@@ -4,7 +4,9 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { BookContainerComponent } from './component/book-container/book-container.component';
 import { BookDetailsComponent } from './component/book-details/book-details.component';
 
+
 const routes: Routes = [
+
   {
     path: 'dashboard',
     component: DashboardComponent,
