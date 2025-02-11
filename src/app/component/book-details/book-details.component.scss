@@ -1,0 +1,104 @@
+.book-details-cnt{
+    width: 1005px;
+    margin-left: 260px;
+    display: flex;
+    padding-top: 50px;
+    height: 500px;
+    margin-top: 20px;
+}
+
+.left-cnt{
+    width: 270px;
+}
+
+.img-cnt{
+    height: 313px;
+    border: 1px solid #E2E2E2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-wishlist-cnt{
+    width: 270px;
+    // border: 1px solid green;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.cart-wishlist-cnt button{
+    width: 125px;
+    height: 33px;
+}
+
+#cart-btn{
+    background-color: #A03037;
+    color: white;
+}
+
+#wishlist-btn{
+    background-color: #0A0102;
+    color: white;
+}
+
+
+
+#book-name {
+    font-size: 24px;
+    color: #0A0102;
+    margin-top: 0px;
+    margin-bottom: 5px;
+
+}
+
+#book-author {
+    text-align: left;
+    font-size: 16px;
+    color: #878787;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+
+#book-ratings {
+    font-size: 18px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+#book-price {
+    font-size: 30px;
+    color: #0A0102;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+
+.right-cnt{
+    height: 313px;
+    width: 400px;
+    margin-left: 37px;
+}
+
+
+.book-detail{
+    border-top: 1px solid #E2E2E2;
+    border-bottom: 1px solid #E2E2E2;
+ }
+
+ #book-detail-heading{
+    font-size: 14px;
+    color: #878787;
+    margin-bottom: 3px;
+    margin-top: 25px;
+ }
+
+ 
+ #book-detail-summary{
+    font-size: 10px;
+    color: #878787;
+    margin-top: 0px;
+    margin-bottom: 25px;
+ }
+

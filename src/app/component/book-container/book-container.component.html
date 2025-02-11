@@ -1,4 +1,10 @@
 
-<div *ngFor="let book of books" clsss="books-cnt">
-    <app-book-card [book]="book"></app-book-card>
+<div class="heading-cnt">
+    <p id="book-heading">Books<p>
+    <p id="book-count">(booksCount)</p>
+</div>
+<div class="books-cnt">
+    <div *ngFor="let book of books">
+        <app-book-card [book]="book"></app-book-card>
+    </div>
 </div>
