@@ -8,10 +8,16 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent {
 
+  // action: string=""
+
   constructor(private router: Router) {}
 
-  handleCartBtnClick(){
-    this.router.navigate(['/dashboard/cart']);
+  handleDashBoardBtnClick(action: string){
+    if(action==="cart"){
+      this.router.navigate(['/dashboard/cart']);
+    }
+    if(action==="book"){
+      this.router.navigate(['/dashboard/books']);
+    } 
   }
-
 }
