@@ -10,8 +10,11 @@ export class BookService {
 
 
   fetchAllBooksApiCall(){
-   
     return this.httpService.getApiCall("http://localhost:3000/api/v1/book/")
+  }
+
+  fetchBookByIdApiCall(bookId: string){
+    return this.httpService.getApiCall("http://localhost:3000/api/v1/book/"+bookId)
   }
 
 }

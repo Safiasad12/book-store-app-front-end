@@ -28,26 +28,15 @@ export class BookContainerComponent {
 
   constructor(private bookService: BookService) { }
 
-  ngOnInit() {
-    
+  ngOnInit() {  
     this.bookService.fetchAllBooksApiCall().subscribe({
       next: (res: any) => {
-
         console.log(res);
-
-        this.bookList=res.data.books
-
-
-        // this.bookList = res.notes.filter((note: any) => !(note.isArchive) && !(note.isTrash)).reverse()
-        // console.log(this.notesList);
-
-
+        this.bookList=res.data.books;
       },
       error: (err) => {
         console.log(err);
-
       }
-
     })
   }
 }
