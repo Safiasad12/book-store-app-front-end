@@ -8,3 +8,20 @@
         <app-book-card [book]="book"></app-book-card>
     </div>
 </div>
+
+<div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">&#10094;</button> 
+
+    <span *ngFor="let page of pagesToShow">
+        <button 
+            *ngIf="page !== '...'" 
+            (click)="goToPage(page)" 
+            [class.active]="currentPage === page">
+            {{ page }}
+        </button>
+        <span *ngIf="page === '...'">{{ page }}</span>
+    </span>
+
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">&#10095;</button> 
+</div>
+

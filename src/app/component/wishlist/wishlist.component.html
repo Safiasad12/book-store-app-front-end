@@ -1,0 +1,18 @@
+<div class="wishlist-container">
+    <h2>My Wishlist ({{ wishlist.length < 10 ? '0' + wishlist.length : wishlist.length }})</h2>
+  
+    <div *ngFor="let book of wishlist" class="wishlist-item">
+      <img [src]="book.image" alt="{{ book.title }}" class="book-image">
+      
+      <div class="book-info">
+        <h3>{{ book.title }}</h3>
+        <p>by {{ book.author }}</p>
+        <p><strong>Rs. {{ book.price }}</strong> <span class="original-price">Rs. {{ book.originalPrice }}</span></p>
+      </div>
+  
+      <button class="delete-btn" (click)="removeFromWishlist(book.id)">
+        🗑️
+      </button>
+    </div>
+  </div>
+  

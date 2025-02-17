@@ -1,0 +1,45 @@
+.wishlist-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .wishlist-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .book-image {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+  }
+  
+  .book-info {
+    flex-grow: 1;
+  }
+  
+  .original-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-left: 5px;
+  }
+  
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  

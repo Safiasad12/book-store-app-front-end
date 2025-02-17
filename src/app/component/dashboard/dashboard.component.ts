@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent {
 
-  // action: string=""
 
   constructor(private router: Router) {}
 

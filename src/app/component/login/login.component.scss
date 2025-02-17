@@ -1,0 +1,128 @@
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ccc;
+  }
+  
+  .login-box {
+    background: white;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 18vw;
+
+  }
+
+  .heading{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .heading h2{
+    cursor: pointer;
+  }
+
+  #current-page{
+    text-decoration: underline;
+    text-decoration-color: brown;
+  }
+
+
+  .email-field, .password-field {
+    display: flex;
+    align-items: center;
+    padding-right: 18px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+  }
+
+  input{
+    width: 100%;
+    height: 36px;
+    margin-right: -10px;
+  }
+
+  label{
+    padding-left: 12px;
+    font-size: 12px;
+  }
+  
+  
+  .password-field button {
+    border: none;
+    cursor: pointer;
+    margin-left: -30px;
+    background-color: transparent;
+  }
+
+.password-field button svg {
+    width: 20px;  
+    height: 20px;
+    fill: currentColor;
+  }
+
+  .forgot-pass-btn{
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: -8px;
+    width: 93%;
+    padding-left: 10px;
+  }
+
+  .forgot-pass-btn button{
+    border: none;
+    background-color: transparent;
+    color: grey;
+    font-size: 12px;
+    
+  }
+
+  .login-btn{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    height: 36px;
+  }
+
+  .login-btn button{
+    color: white;
+    background-color: brown;
+    width: 100%;
+    border-radius: 3px;
+    border: none;
+  }
+  
+  .separator {
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .social-login {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .social-login button{
+    color: white;
+    width: 48%;
+    display: flex;
+    justify-content: center;
+    border: none;
+    border-radius: 3px;
+  }
+  
+  .facebook {
+    background-color: #3b5998;
+   
+  }
+  
+  .google {
+    background-color: rgb(129, 129, 129);
+  }
+  

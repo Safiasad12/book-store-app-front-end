@@ -9,8 +9,8 @@ export class BookService {
   constructor(private httpService: HttpService) { }
 
 
-  fetchAllBooksApiCall(){
-    return this.httpService.getApiCall("http://localhost:3000/api/v1/book/")
+  fetchAllBooksApiCall(page: number, pageSize: number){
+    return this.httpService.getApiCall(`http://localhost:3000/api/v1/book?page=${page}&limit=${pageSize}`)
   }
 
   fetchBookByIdApiCall(bookId: string){

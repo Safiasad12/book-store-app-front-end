@@ -4,11 +4,24 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { BookContainerComponent } from './component/book-container/book-container.component';
 import { BookDetailsComponent } from './component/book-details/book-details.component';
 import { CartComponent } from './component/cart/cart.component';
+import { WishlistComponent } from './component/wishlist/wishlist.component';
+import { LoginComponent } from './component/login/login.component';
+import { SignupComponent } from './component/signup/signup.component';
 
 
 const routes: Routes = [
 
   {
+    path: '',
+    component: LoginComponent
+  },
+
+  {
+    path: 'signup',
+    component: SignupComponent
+  },
+
+  { 
     path: 'dashboard',
     component: DashboardComponent,
     children: [
@@ -17,13 +30,18 @@ const routes: Routes = [
         component: BookContainerComponent
       },
       {
-        path: 'book-details',
+        path: 'book-details/:id',
         component: BookDetailsComponent
       },
       {
         path: 'cart',
         component: CartComponent
+      },
+      {
+        path: 'wishlist',
+        component: WishlistComponent
       }
+      
     ]
   },
 ];

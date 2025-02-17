@@ -1,0 +1,37 @@
+<div class="signup-cnt">
+
+  
+
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+    <div class="heading">
+      <h2 (click)="onLoginClick()">LOGIN</h2>
+      <h2 id="current-page">SIGNUP</h2>
+    </div>
+    <label>Username</label>
+    <input type="text" formControlName="userName" placeholder="Enter username" />
+    <div *ngIf="signupForm.get('userName')?.invalid && signupForm.get('userName')?.touched">
+      Enter a valid username (min 3 characters)
+    </div>
+    
+    <label>Email</label>
+    <input type="email" formControlName="email" placeholder="Enter email" />
+    <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+      Enter a valid email
+    </div>
+    
+    <label>Password</label>
+    <input type="password" formControlName="password" placeholder="Enter password" />
+    <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+      Password must be at least 6 characters long
+    </div>
+    
+    <label>Mobile Number</label>
+    <input type="text" formControlName="mobileNumber" placeholder="Enter mobile number" />
+    <div *ngIf="signupForm.get('mobileNumber')?.invalid && signupForm.get('mobileNumber')?.touched">
+      Enter a valid 10-digit mobile number
+    </div>
+    
+    <button type="submit" [disabled]="signupForm.invalid">Sign Up</button>
+  </form>
+
+</div>

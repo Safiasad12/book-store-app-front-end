@@ -1,21 +1,115 @@
-<div class="cart-cnt">
-    <div class="heading-cnt">
-        <h3>My Cart</h3>
-    </div>
-    <div class="details-cnt">
-        <div class="img-cnt"><img src="../../../assets/book-image/Image 11.png" alt=""></div>
-        <div class="description-cnt">
-            <p>Book Name</p>
-            <p>author</p>
-            <p>price</p>
-            <div class="cart-wishlist-cnt">
-                <div class="update-cart-btn">
-                    <button>-</button>
-                    <p>1</p>
-                    <button>+</button>
-                </div>
-                <button id="wishlist-btn">Remove</button>
-           </div> 
+<nav>
+    <p>Home / <span>My cart</span></p>
+  </nav>
+  
+  <div class="cart-container">
+    <div class="cart-card">
+      <h2>My cart ({{ cartItems.length }})</h2>
+      <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+        <img [src]="item.image" [alt]="item.title">
+        <div class="item-details">
+          <h3>{{ item.title }}</h3>
+          <p>by {{ item.author }}</p>
+          <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.oldPrice }}</span></p>
+          <div class="quantity">
+            <button (click)="decreaseQuantity(i)">-</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="increaseQuantity(i)">+</button>
+            <button class="remove" (click)="removeItem(i)">Remove</button>
+          </div>
+          
         </div>
+      </div>
     </div>
-</div>
+    <div class="cart-location">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>BridgeLabz Solutions LLP, No...</span>
+    </div>
+  </div>
+  
+
+
+
+  <div class="customer-details">
+
+    <div class="customer-header">
+        <h2>Customer Details</h2>
+        <button class="add-address">Add New Address</button>
+    </div>
+  
+    <div class="customer-info">
+      <div class="input-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" value="safi" disabled/>
+      </div>
+  
+      <div class="input-group">
+        <label for="mobileNumber">Mobile Number</label>
+        <input type="text" id="mobileNumber" value="6232665729" disabled/>
+      </div>
+    </div>
+  
+    <div class="address-section">
+      <div class="address-option">
+        <input type="radio" name="address" id="work" checked />
+        <label for="work"><b>1. WORK</b></label>
+        <a href="#" class="edit-link">Edit</a>
+      </div>
+      <p class="address">Address</p>
+      <textarea disabled>
+  BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore
+      </textarea>
+  
+      <div class="customer-info">
+        <div class="input-group">
+          <label>City/Town</label>
+          <input type="text" value="Bangaluru" disabled/>
+        </div>
+        <div class="input-group">
+          <label>State</label>
+          <input type="text" value="karnataka" disabled/>
+        </div>
+      </div>
+  
+      <div class="address-option">
+        <input type="radio" name="address" id="home" />
+        <label for="home"><b>2. HOME</b></label>
+      </div>
+      <p class="address">Address</p>
+  
+      <p class="home-address">
+        BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore
+      </p>
+  
+      <div class="continue-btn">
+        <button>CONTINUE</button>
+      </div>
+     
+    </div>
+  </div>
+  
+
+
+
+  <div class="order-summary">
+    <h2>Order summary</h2>
+    <div class="order-content">
+      <img src="assets/book-cover.jpg" alt="Book Image" class="book-image" />
+  
+      <div class="order-details">
+        <p class="book-title">Don't Make Me Think</p>
+        <p class="author">by Steve Krug</p>
+        <p class="price">
+          <span class="new-price">Rs. 1500</span>
+          <span class="old-price">Rs. 2000</span>
+        </p>
+      </div>
+    </div>  
+    <div class="checkout-btn">
+        <button >CHECKOUT</button>
+    </div>
+  </div>
+
+
+
+

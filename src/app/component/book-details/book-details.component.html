@@ -4,15 +4,18 @@
         <div class="img-cnt">
             <img [src]=image alt="">
         </div>
-       <div class="cart-wishlist-cnt">
-            <button id="add-cart-btn" *ngIf="!inCart">ADD TO BAG</button>
-            <div class="update-cart-btn">
+        <div class="cart-wishlist-cnt">
+            <button id="add-cart-btn" *ngIf="!inCart && !outOfStock" (click)="addToCart()">ADD TO BAG</button>
+            
+            <div class="update-cart-btn" *ngIf="inCart">
                 <button>-</button>
                 <p>1</p>
                 <button>+</button>
             </div>
-            <button id="wishlist-btn">WISHLIST</button>
-       </div> 
+        
+            <button id="notify-btn" *ngIf="outOfStock">NOTIFY ME</button>
+            <button id="wishlist-btn">Wishlist</button>
+        </div> 
     </div>
     
     <div class="right-cnt">

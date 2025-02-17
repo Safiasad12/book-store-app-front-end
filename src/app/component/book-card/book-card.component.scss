@@ -55,13 +55,12 @@
 
 
 #book-ratings {
-    width: 14px;
+    width: 17px;
     height: 13px;
-    text-align: left;
     font: normal normal bold 10px/13px Roboto;
-    letter-spacing: 0px;
-    // color: #FFFFFF;
-    opacity: 1;
+    color: #FFFFFF;
+    background-color: rgb(18, 186, 18);
+    padding-left: 2px;
 }
 
 #book-price {
