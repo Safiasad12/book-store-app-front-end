@@ -27,6 +27,7 @@
     cursor: pointer;
   }
 
+
   #current-page{
     text-decoration: underline;
     text-decoration-color: brown;
@@ -126,3 +127,45 @@
     background-color: rgb(129, 129, 129);
   }
   
+
+
+
+
+
+  .heading h2 {
+    cursor: pointer;
+    color: grey;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .heading h2.active {
+    color: brown;
+    font-weight: bold;
+  }
+
+
+  .validation-error {
+    color: red;
+    font-size: 12px;
+    margin-top: -7px;
+    margin-left: 12px;
+
+  }
+
+  .signup-btn{
+    display: flex;
+    justify-content: center;
+  }
+
+  .signup-btn button{
+    width: 92%;
+    color: white;
+    background-color: brown;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+ 
+  button{
+    cursor: pointer;
+  }

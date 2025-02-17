@@ -1,34 +1,50 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss',]
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  passwordVisible: boolean = false;
+  signupForm: FormGroup;
+  isLogin = true;
+  submitted = false;
+  passwordVisible = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
+
+    this.signupForm = this.fb.group({
+      userName: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+    });
+  }
+
+  toggleForm(formType: string) {
+    this.isLogin = formType === 'login';
+    this.submitted = false; // Reset validation messages on form switch
   }
 
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
   }
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      console.log('Login Data:', this.loginForm.value);
-    }
-  }
+  onSubmit(formType: string) {
+    this.submitted = true; // Show validation messages after submission
 
-  onSigUpClick(){
-    this.router.navigate(['/signup'])
+    if (formType === 'login' && this.loginForm.valid) {
+      console.log('Login successful', this.loginForm.value);
+      // Handle login logic here
+    } else if (formType === 'signup' && this.signupForm.valid) {
+      console.log('Signup successful', this.signupForm.value);
+      // Handle signup logic here
+    }
   }
 }
