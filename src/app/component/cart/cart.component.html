@@ -30,64 +30,107 @@
 
 
 
+
+
+  
+
+
   <div class="customer-details">
 
     <div class="customer-header">
-        <h2>Customer Details</h2>
-        <button class="add-address">Add New Address</button>
+      <h2>Customer Details</h2>
+      <button class="add-address">Add New Address</button>
     </div>
   
     <div class="customer-info">
       <div class="input-group">
         <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" value="safi" disabled/>
+        <input type="text" id="fullName" value="safi" disabled />
       </div>
   
       <div class="input-group">
         <label for="mobileNumber">Mobile Number</label>
-        <input type="text" id="mobileNumber" value="6232665729" disabled/>
+        <input type="text" id="mobileNumber" value="6232665729" disabled />
       </div>
     </div>
   
     <div class="address-section">
       <div class="address-option">
-        <input type="radio" name="address" id="work" checked />
-        <label for="work"><b>1. WORK</b></label>
-        <a href="#" class="edit-link">Edit</a>
+        <input type="radio" name="address" id="home" checked />
+        <label for="home"><b>1. HOME</b></label>
+        <button class="edit-btn" (click)="toggleEdit('home')" [ngClass]="{ 'blue-btn': homeIsEditing }"> 
+          {{ homeIsEditing ? 'Save' : 'Edit' }} 
+        </button>
       </div>
+      
       <p class="address">Address</p>
-      <textarea disabled>
-  BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore
-      </textarea>
   
-      <div class="customer-info">
-        <div class="input-group">
-          <label>City/Town</label>
-          <input type="text" value="Bangaluru" disabled/>
+      <!-- Conditional rendering using *ngIf -->
+      <ng-container *ngIf="homeIsEditing; else homeViewMode">
+        <textarea [(ngModel)]="homeAddress"></textarea>
+        <div class="customer-info">
+          <div class="input-group">
+            <label>City/Town</label>
+            <input type="text" value="Bangaluru" disabled />
+          </div>
+          <div class="input-group">
+            <label>State</label>
+            <input type="text" value="Karnataka" disabled />
+          </div>
         </div>
-        <div class="input-group">
-          <label>State</label>
-          <input type="text" value="karnataka" disabled/>
-        </div>
-      </div>
+      </ng-container>
+  
+      <ng-template #homeViewMode>
+        <span>{{ homeAddress }}</span>
+      </ng-template>
+  
+      
   
       <div class="address-option">
-        <input type="radio" name="address" id="home" />
-        <label for="home"><b>2. HOME</b></label>
+        <input type="radio" name="address" id="work" checked />
+        <label for="work"><b>2. WORK</b></label>
+        <button class="edit-btn" (click)="toggleEdit('work')" [ngClass]="{ 'blue-btn': workIsEditing }"> 
+          {{ workIsEditing ? 'Save' : 'Edit' }} 
+        </button>
       </div>
+      
       <p class="address">Address</p>
   
-      <p class="home-address">
-        BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore
-      </p>
+      <!-- Conditional rendering using *ngIf -->
+      <ng-container *ngIf="workIsEditing; else workViewMode">
+        <textarea [(ngModel)]="workAddress"></textarea>
+        <div class="customer-info">
+          <div class="input-group">
+            <label>City/Town</label>
+            <input type="text" value="Bangaluru" disabled />
+          </div>
+          <div class="input-group">
+            <label>State</label>
+            <input type="text" value="Karnataka" disabled />
+          </div>
+        </div>
+      </ng-container>
+  
+      <ng-template #workViewMode>
+        <span>{{ workAddress }}</span>
+      </ng-template>
   
       <div class="continue-btn">
         <button>CONTINUE</button>
       </div>
-     
+  
     </div>
   </div>
   
+
+
+
+
+
+
+
+
+
 
 
 

@@ -13,7 +13,7 @@ import { BookDetailsComponent } from './component/book-details/book-details.comp
 import { CartComponent } from './component/cart/cart.component';
 import { WishlistComponent } from './component/wishlist/wishlist.component';
 import { LoginComponent } from './component/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignupComponent } from './component/signup/signup.component';
 
 
@@ -37,6 +37,7 @@ import { SignupComponent } from './component/signup/signup.component';
     MatMenuModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

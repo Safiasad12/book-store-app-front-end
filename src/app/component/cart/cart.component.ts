@@ -8,6 +8,10 @@ import { DataService } from 'src/app/service/data-service/data.service';
 })
 export class CartComponent {
   cartItems:any[] = [];
+  homeIsEditing: boolean = false;
+  workIsEditing: boolean = false;
+  homeAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
+  workAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
 
   constructor(private dataService: DataService) { }
 
@@ -34,21 +38,32 @@ export class CartComponent {
     this.dataService.updateCart(this.cartItems);
   }
 
-  customer = {
-    fullName: 'Poonam Yadav',
-    mobileNumber: '81678954778',
-    addresses: [
-      {
-        type: 'WORK',
-        details: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore',
-        city: 'Bengaluru',
-        state: 'Karnataka'
-      },
-      {
-        type: 'HOME',
-        details: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore'
-      }
-    ]
-  };
+  // customer = {
+  //   fullName: 'Safi Siddiqui',
+  //   mobileNumber: '6232665729',
+  //   addresses: {
+  //     {
+  //       type: 'HOME',
+  //       details: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore'
+  //     },
+  //     {
+  //       type: 'WORK',
+  //       details: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore',
+  //       city: 'Bengaluru',
+  //       state: 'Karnataka'
+  //     },
+  //   }
+  // };
+
+  toggleEdit(action:string) {
+    // event.preventDefault(); // Prevent default anchor behavior
+    if(action==='home'){
+      this.homeIsEditing = !this.homeIsEditing;
+    }
+    if(action==='work'){
+      this.workIsEditing = !this.workIsEditing;
+    }
+   
+  }
   
 }

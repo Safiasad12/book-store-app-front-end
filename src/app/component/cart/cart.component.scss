@@ -160,12 +160,16 @@ nav p span{
       gap: 10px;
       margin-top: 20px;
 
-      .edit-link {
+      .edit-btn {
         color: red;
         cursor: pointer;
-        margin-left: 10px;
-        text-decoration: none;
+        border: none;
+        background-color: transparent;
       }
+      .blue-btn {
+        color: blue;
+      }
+
     }
 
     textarea {
