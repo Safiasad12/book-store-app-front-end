@@ -1,158 +1,148 @@
 <nav>
-    <p>Home / <span>My cart</span></p>
-  </nav>
-  
-  <div class="cart-container">
-    <div class="cart-card">
-      <h2>My cart ({{ cartItems.length }})</h2>
-      <div *ngFor="let item of cartItems; let i = index" class="cart-item">
-        <img [src]="item.image" [alt]="item.title">
-        <div class="item-details">
-          <h3>{{ item.title }}</h3>
-          <p>by {{ item.author }}</p>
-          <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.oldPrice }}</span></p>
-          <div class="quantity">
-            <button (click)="decreaseQuantity(i)">-</button>
-            <span>{{ item.quantity }}</span>
-            <button (click)="increaseQuantity(i)">+</button>
-            <button class="remove" (click)="removeItem(i)">Remove</button>
-          </div>
-          
+  <p>Home / <span>My cart</span></p>
+</nav>
+
+<div class="cart-container">
+  <div class="cart-card">
+    <h2>My cart ({{ cartItems.length }})</h2>
+    <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+      <img [src]="item.bookImage" [alt]="item.title">
+      <div class="item-details">
+        <h3>{{ item.bookName }}</h3>
+        <p>by {{ item.author }}</p>
+        <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.oldPrice }}</span></p>
+        <div class="quantity">
+          <button (click)="decreaseQuantity(i)">-</button>
+          <span>{{ item.quantity }}</span>
+          <button (click)="increaseQuantity(i)">+</button>
+          <button class="remove" (click)="removeItem(i)">Remove</button>
         </div>
       </div>
     </div>
-    <div class="cart-location">
-      <i class="fas fa-map-marker-alt"></i>
-      <span>BridgeLabz Solutions LLP, No...</span>
+  </div>
+  <div class="cart-location">
+    <i class="fas fa-map-marker-alt"></i>
+    <span>BridgeLabz Solutions LLP, No...</span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="customer-details">
+
+  <div class="customer-header">
+    <h2>Customer Details</h2>
+    <button class="add-address" (click)="toggleAddNewAddress()">Add New Address</button>
+  </div>
+
+  <div class="customer-info">
+    <div class="input-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" value="safi" disabled />
+    </div>
+
+    <div class="input-group">
+      <label for="mobileNumber">Mobile Number</label>
+      <input type="text" id="mobileNumber" value="6232665729" disabled />
     </div>
   </div>
-  
 
-
-
-
-
-  
-
-
-  <div class="customer-details">
-
-    <div class="customer-header">
-      <h2>Customer Details</h2>
-      <button class="add-address">Add New Address</button>
-    </div>
-  
-    <div class="customer-info">
-      <div class="input-group">
-        <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" value="safi" disabled />
-      </div>
-  
-      <div class="input-group">
-        <label for="mobileNumber">Mobile Number</label>
-        <input type="text" id="mobileNumber" value="6232665729" disabled />
-      </div>
-    </div>
-  
-    <div class="address-section">
-      <div class="address-option">
-        <input type="radio" name="address" id="home" checked />
-        <label for="home"><b>1. HOME</b></label>
-        <button class="edit-btn" (click)="toggleEdit('home')" [ngClass]="{ 'blue-btn': homeIsEditing }"> 
-          {{ homeIsEditing ? 'Save' : 'Edit' }} 
+  <div class="address-section">
+    <div class="saved-addresses" *ngIf="savedAddresses.length > 0">
+      <h2>Saved Addresses</h2>
+      <div *ngFor="let address of savedAddresses; let i = index" class="address-card">
+        <input type="radio" name="address" checked />
+        <label>{{ i + 1 }}. <b>{{ address.type.toUpperCase() }}</b></label>
+        <button class="edit-btn" (click)="toggleEdit(i)" [ngClass]="{ 'blue-btn': isEditing[i] }">
+          {{ isEditing[i] ? 'Save' : 'Edit' }}
         </button>
+        <ng-container *ngIf="isEditing[i]; else viewMode">
+          <textarea [(ngModel)]="savedAddresses[i].address"></textarea>
+          <div class="customer-info">
+            <div class="input-group">
+              <label>City/Town</label>
+              <input type="text" [(ngModel)]="savedAddresses[i].city">
+            </div>
+            <div class="input-group">
+              <label>State</label>
+              <input type="text" [(ngModel)]="savedAddresses[i].state">
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #viewMode>
+          <p>{{ address.address + ", " + address.city + ", " + address.state}}</p>
+        </ng-template>
       </div>
-      
-      <p class="address">Address</p>
-  
-      <!-- Conditional rendering using *ngIf -->
-      <ng-container *ngIf="homeIsEditing; else homeViewMode">
-        <textarea [(ngModel)]="homeAddress"></textarea>
-        <div class="customer-info">
-          <div class="input-group">
-            <label>City/Town</label>
-            <input type="text" value="Bangaluru" disabled />
-          </div>
-          <div class="input-group">
-            <label>State</label>
-            <input type="text" value="Karnataka" disabled />
-          </div>
+    </div>
+
+
+    <div class="add-new-address-cnt" *ngIf="addingNewAddress">
+      <label class="label">Address</label>
+      <textarea class="input-box" [(ngModel)]="newAddress.address" placeholder="Enter address"></textarea>
+
+      <div class="row">
+        <div class="input-group">
+          <label class="label">City/Town</label>
+          <input type="text" class="input-box" [(ngModel)]="newAddress.city">
         </div>
-      </ng-container>
-  
-      <ng-template #homeViewMode>
-        <span>{{ homeAddress }}</span>
-      </ng-template>
-  
-      
-  
-      <div class="address-option">
-        <input type="radio" name="address" id="work" checked />
-        <label for="work"><b>2. WORK</b></label>
-        <button class="edit-btn" (click)="toggleEdit('work')" [ngClass]="{ 'blue-btn': workIsEditing }"> 
-          {{ workIsEditing ? 'Save' : 'Edit' }} 
-        </button>
-      </div>
-      
-      <p class="address">Address</p>
-  
-      <!-- Conditional rendering using *ngIf -->
-      <ng-container *ngIf="workIsEditing; else workViewMode">
-        <textarea [(ngModel)]="workAddress"></textarea>
-        <div class="customer-info">
-          <div class="input-group">
-            <label>City/Town</label>
-            <input type="text" value="Bangaluru" disabled />
-          </div>
-          <div class="input-group">
-            <label>State</label>
-            <input type="text" value="Karnataka" disabled />
-          </div>
+        <div class="input-group">
+          <label class="label">State</label>
+          <input type="text" class="input-box" [(ngModel)]="newAddress.state">
         </div>
-      </ng-container>
-  
-      <ng-template #workViewMode>
-        <span>{{ workAddress }}</span>
-      </ng-template>
-  
-      <div class="continue-btn">
-        <button>CONTINUE</button>
       </div>
-  
+
+      <label class="label">Type</label>
+      <div class="radio-group">
+        <label><input type="radio" name="type" [(ngModel)]="newAddress.type" value="Home"> Home</label>
+        <label><input type="radio" name="type" [(ngModel)]="newAddress.type" value="Work" checked> Work</label>
+        <label><input type="radio" name="type" [(ngModel)]="newAddress.type" value="Other"> Other</label>
+
+        <button id="new-address-save-btn" (click)="saveNewAddress()">Save</button>
+      </div>
+
+    </div>
+
+    <div class="continue-btn">
+      <button>CONTINUE</button>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="order-summary">
+  <h2>Order summary</h2>
+  <div class="order-content">
+    <img src="assets/book-cover.jpg" alt="Book Image" class="book-image" />
+
+    <div class="order-details">
+      <p class="book-title">Don't Make Me Think</p>
+      <p class="author">by Steve Krug</p>
+      <p class="price">
+        <span class="new-price">Rs. 1500</span>
+        <span class="old-price">Rs. 2000</span>
+      </p>
     </div>
   </div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="order-summary">
-    <h2>Order summary</h2>
-    <div class="order-content">
-      <img src="assets/book-cover.jpg" alt="Book Image" class="book-image" />
-  
-      <div class="order-details">
-        <p class="book-title">Don't Make Me Think</p>
-        <p class="author">by Steve Krug</p>
-        <p class="price">
-          <span class="new-price">Rs. 1500</span>
-          <span class="old-price">Rs. 2000</span>
-        </p>
-      </div>
-    </div>  
-    <div class="checkout-btn">
-        <button >CHECKOUT</button>
-    </div>
+  <div class="checkout-btn">
+    <button>CHECKOUT</button>
   </div>
-
-
-
-
+</div>

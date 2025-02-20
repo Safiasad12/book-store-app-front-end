@@ -4,6 +4,9 @@
     </div>
     <p id="book-name">{{book.bookName}}</p>
     <p id="book-author">{{book.author}}</p>
-    <p id="book-ratings">4.5</p>
-    <p id="book-price">{{book.price}}</p>
+    <p id="book-ratings">
+        <span class="rating-number">4.5</span> 
+        <span class="star">&#9733;</span>
+    </p>
+    <p id="book-price">{{"$"+book.price}}</p>
 </div>

@@ -27,6 +27,7 @@ nav p span{
     border: 1px solid black;
 }
 
+
 .cart-card h2 {
     margin-bottom: 10px;
 }
@@ -34,7 +35,7 @@ nav p span{
 .cart-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .cart-item img {
@@ -154,11 +155,7 @@ nav p span{
   .address-section {
     margin-top: 20px;
 
-    .address-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
+    
 
       .edit-btn {
         color: red;
@@ -170,7 +167,7 @@ nav p span{
         color: blue;
       }
 
-    }
+
 
     textarea {
       width: 98%;
@@ -201,6 +198,7 @@ nav p span{
   }
 
   .continue-btn{
+    margin-top: 7px;
     display: flex;
     flex-direction: row-reverse;
   }
@@ -298,3 +296,80 @@ nav p span{
     margin-top: 20px;
   }
   
+
+
+
+
+.add-new-address-cnt {
+    padding: 5px;
+    background-color: transparent;
+}
+
+h2 {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    .bold {
+        font-weight: bold;
+    }
+    .edit {
+        color: red;
+        font-size: 14px;
+        margin-left: 10px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+}
+
+.label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+.input-box {
+    width: 60%;
+    height: 25px;
+    padding: 10px;  
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f0f0f0;
+    font-size: 14px;
+    resize: none;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+    .input-group {
+        flex: 1;
+        margin-bottom: 16px;
+    }
+}
+
+.radio-group {
+    display: flex;
+    margin-top: 5px;
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    input[type="radio"] {
+        accent-color: red;
+    }
+}
+
+
+#new-address-save-btn{
+  background: #1976d2;
+  border: none;
+  color: white;
+  margin-left: auto;
+  padding: 5px 10px;
+  border-radius: 3px;
+}

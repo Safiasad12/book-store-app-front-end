@@ -19,6 +19,7 @@
     image: string = "";
     quantity: number = 1;
     inCart: boolean = false;
+    inWishlist: boolean = false;
     outOfStock: boolean = false;
     
     constructor(private bookService: BookService, private route: ActivatedRoute, private dataService: DataService) {}
@@ -49,6 +50,11 @@
 
     addToCart() {
       this.inCart = true;
-      this.dataService.addToCart(this.book);
+      this.dataService.addToCart(this.book);    
+    }
+
+    addToWishlist(){
+      this.inWishlist = true;
+      this.dataService.addToWishlist(this.book);
     }
   }

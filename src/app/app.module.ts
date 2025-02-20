@@ -14,7 +14,6 @@ import { CartComponent } from './component/cart/cart.component';
 import { WishlistComponent } from './component/wishlist/wishlist.component';
 import { LoginComponent } from './component/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignupComponent } from './component/signup/signup.component';
 
 
 
@@ -28,7 +27,6 @@ import { SignupComponent } from './component/signup/signup.component';
     CartComponent,
     WishlistComponent,
     LoginComponent,
-    SignupComponent,
   ],
   imports: [
     BrowserModule,

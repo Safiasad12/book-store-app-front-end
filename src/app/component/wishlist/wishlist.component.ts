@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from 'src/app/service/data-service/data.service';
 
 @Component({
   selector: 'app-wishlist',
@@ -7,30 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WishlistComponent implements OnInit {
   
-  wishlist: any[] = [
-    {
-      id: '1',
-      title: "Don't Make Me Think",
-      author: "Steve Krug",
-      price: 1500,
-      originalPrice: 2000,
-      image: "assets/dont-make-me-think.jpg" // Replace with actual image URL
-    },
-    {
-      id: '2',
-      title: "React Material-UI",
-      author: "Cookbook",
-      price: 780,
-      originalPrice: 1000,
-      image: "assets/react-material-ui.jpg" // Replace with actual image URL
-    }
-  ];
+  wishlist: any[] = []
 
-  constructor() {}
+  constructor(private dataService: DataService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dataService.wishlist$.subscribe(items => {
+      this.wishlist = items;
+    });
+  }
 
-  removeFromWishlist(bookId: string) {
-    this.wishlist = this.wishlist.filter(book => book.id !== bookId);
+  removeFromWishlist(index: number) {
+    this.dataService.removeFromWishlist(this.wishlist[index]._id);
   }
 }

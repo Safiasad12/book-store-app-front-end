@@ -29,7 +29,7 @@ export class LoginComponent {
 
   toggleForm(formType: string) {
     this.isLogin = formType === 'login';
-    this.submitted = false; // Reset validation messages on form switch
+    this.submitted = false; 
   }
 
   togglePasswordVisibility() {
@@ -37,14 +37,12 @@ export class LoginComponent {
   }
 
   onSubmit(formType: string) {
-    this.submitted = true; // Show validation messages after submission
+    this.submitted = true; 
 
     if (formType === 'login' && this.loginForm.valid) {
       console.log('Login successful', this.loginForm.value);
-      // Handle login logic here
     } else if (formType === 'signup' && this.signupForm.valid) {
       console.log('Signup successful', this.signupForm.value);
-      // Handle signup logic here
     }
   }
 }

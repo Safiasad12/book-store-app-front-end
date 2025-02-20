@@ -14,7 +14,7 @@
             </div>
         
             <button id="notify-btn" *ngIf="outOfStock">NOTIFY ME</button>
-            <button id="wishlist-btn">Wishlist</button>
+            <button id="wishlist-btn" (click)="addToWishlist()">Wishlist</button>
         </div> 
     </div>
     
@@ -24,7 +24,7 @@
         <p id="book-ratings">
             <span class="rating-number">4.5</span> 
             <span class="star">&#9733;</span>
-          </p>
+        </p>
         <p id="book-price">{{price}}</p> 
         <div class="book-detail">
             <p id="book-detail-heading">Book Detail</p>

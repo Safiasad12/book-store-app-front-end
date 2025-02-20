@@ -6,7 +6,6 @@ import { BookDetailsComponent } from './component/book-details/book-details.comp
 import { CartComponent } from './component/cart/cart.component';
 import { WishlistComponent } from './component/wishlist/wishlist.component';
 import { LoginComponent } from './component/login/login.component';
-import { SignupComponent } from './component/signup/signup.component';
 
 
 const routes: Routes = [
@@ -14,11 +13,6 @@ const routes: Routes = [
   {
     path: '',
     component: LoginComponent
-  },
-
-  {
-    path: 'signup',
-    component: SignupComponent
   },
 
   { 

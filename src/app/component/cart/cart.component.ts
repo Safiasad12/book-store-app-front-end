@@ -8,10 +8,19 @@ import { DataService } from 'src/app/service/data-service/data.service';
 })
 export class CartComponent {
   cartItems:any[] = [];
-  homeIsEditing: boolean = false;
-  workIsEditing: boolean = false;
+  isEditing: boolean[] = [];
+  savedAddresses: any[] = [];
+  addingNewAddress: boolean = false;
   homeAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
   workAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
+  newAddress = {
+    address: '',
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    type: 'Work',
+  };
+
+  
 
   constructor(private dataService: DataService) { }
 
@@ -34,36 +43,27 @@ export class CartComponent {
   }
 
   removeItem(index: number) {
-    this.cartItems.splice(index, 1);
-    this.dataService.updateCart(this.cartItems);
+    this.dataService.removeFromCart(this.cartItems[index]._id);
   }
 
-  // customer = {
-  //   fullName: 'Safi Siddiqui',
-  //   mobileNumber: '6232665729',
-  //   addresses: {
-  //     {
-  //       type: 'HOME',
-  //       details: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore'
-  //     },
-  //     {
-  //       type: 'WORK',
-  //       details: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore',
-  //       city: 'Bengaluru',
-  //       state: 'Karnataka'
-  //     },
-  //   }
-  // };
+  toggleEdit(index: number) {
+    if (this.isEditing[index] === undefined) {
+      this.isEditing[index] = false; 
+    }
+    this.isEditing[index] = !this.isEditing[index]; 
+  }
 
-  toggleEdit(action:string) {
-    // event.preventDefault(); // Prevent default anchor behavior
-    if(action==='home'){
-      this.homeIsEditing = !this.homeIsEditing;
+  toggleAddNewAddress(){
+    this.addingNewAddress = !this.addingNewAddress;
+  }
+
+  saveNewAddress() {
+    if (this.newAddress.address.trim() !== '') {
+      this.savedAddresses.push({ ...this.newAddress });
+      this.isEditing.push(false); 
+      this.newAddress.address = ''; 
+      this.addingNewAddress = false; 
     }
-    if(action==='work'){
-      this.workIsEditing = !this.workIsEditing;
-    }
-   
   }
   
 }
