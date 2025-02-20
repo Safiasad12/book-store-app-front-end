@@ -1,35 +1,44 @@
-
 <div class="book-details-cnt">
     <div class="left-cnt">
         <div class="img-cnt">
-            <img [src]=image alt="">
+            <img [src]="image" alt="{{name}}">
         </div>
+
         <div class="cart-wishlist-cnt">
-            <button id="add-cart-btn" *ngIf="!inCart && !outOfStock" (click)="addToCart()">ADD TO BAG</button>
-            
-            <div class="update-cart-btn" *ngIf="inCart">
-                <button>-</button>
-                <p>1</p>
-                <button>+</button>
+            <button id="add-cart-btn" *ngIf="!inCart() && !outOfStock" (click)="addToCart()">
+                ADD TO BAG
+            </button>
+
+            <div class="update-cart-btn" *ngIf="inCart()">
+                <button (click)="updateQuantity(-1)">-</button>
+                <p>{{ getCartQuantity() }}</p>
+                <button (click)="updateQuantity(1)">+</button>
             </div>
-        
-            <button id="notify-btn" *ngIf="outOfStock">NOTIFY ME</button>
-            <button id="wishlist-btn" (click)="addToWishlist()">Wishlist</button>
+
+            <button id="notify-btn" *ngIf="outOfStock">
+                NOTIFY ME
+            </button>
+
+            <button id="wishlist-btn" (click)="addToWishlist()">
+                Wishlist
+            </button>
         </div> 
     </div>
-    
+
     <div class="right-cnt">
-        <p id="book-name">{{name}}</p>
-        <p id="book-author">{{author}}</p>
+        <p id="book-name">{{ name }}</p>
+        <p id="book-author">{{ author }}</p>
+
         <p id="book-ratings">
             <span class="rating-number">4.5</span> 
             <span class="star">&#9733;</span>
         </p>
-        <p id="book-price">{{price}}</p> 
+
+        <p id="book-price">₹{{ price }}</p> 
+
         <div class="book-detail">
             <p id="book-detail-heading">Book Detail</p>
-            <p id="book-detail-summary">{{details}}</p>
+            <p id="book-detail-summary">{{ details }}</p>
         </div>
     </div>
-    
 </div>
