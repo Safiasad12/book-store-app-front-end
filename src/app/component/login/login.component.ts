@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'src/app/service/user-service/user.service';
+import { AuthService } from 'src/app/service/auth-service/auth.service';
+import { DataService } from 'src/app/service/data-service/data.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +16,12 @@ export class LoginComponent {
   submitted = false;
   passwordVisible = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private authService: AuthService,
+    private dataService: DataService,
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -29,7 +37,7 @@ export class LoginComponent {
 
   toggleForm(formType: string) {
     this.isLogin = formType === 'login';
-    this.submitted = false; 
+    this.submitted = false;
   }
 
   togglePasswordVisibility() {
@@ -37,12 +45,30 @@ export class LoginComponent {
   }
 
   onSubmit(formType: string) {
-    this.submitted = true; 
+    this.submitted = true;
 
     if (formType === 'login' && this.loginForm.valid) {
-      console.log('Login successful', this.loginForm.value);
-    } else if (formType === 'signup' && this.signupForm.valid) {
-      console.log('Signup successful', this.signupForm.value);
+      this.userService.userLoginApiCall(this.loginForm.value).subscribe({
+        next: (res) => {
+          console.log('Login successful', res);
+          this.authService.setToken(res.accessToken);
+          this.dataService.syncCartWithBackend();
+        },
+        error: (err) => {
+          console.error('Login failed', err);
+        }
+      });
+    }
+
+    else if (formType === 'signup' && this.signupForm.valid) {
+      this.userService.userSignupApiCall(this.signupForm.value).subscribe({
+        next: (res) => {
+          console.log('Signup successful', res);
+        },
+        error: (err) => {
+          console.error('Signup failed', err);
+        }
+      });
     }
   }
 }

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { DataService } from 'src/app/service/data-service/data.service';
+import { LoginComponent } from '../login/login.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cart',
@@ -15,14 +18,14 @@ export class CartComponent {
   workAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
   newAddress = {
     address: '',
-    city: 'Bengaluru',
-    state: 'Karnataka',
-    type: 'Work',
+    city: '',
+    state: '',
+    type: '',
   };
 
   
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService,  private authService: AuthService,  private dialog: MatDialog) { }
 
   ngOnInit() {
     this.dataService.cartItems$.subscribe(items => {
@@ -65,5 +68,19 @@ export class CartComponent {
       this.addingNewAddress = false; 
     }
   }
-  
+
+
+
+
+  placeOrder() {
+    if (!this.authService.isLoggedIn()) {
+      this.dialog.open(LoginComponent, {
+        width: '750px',
+        disableClose: true,
+      });
+    } else {
+      console.log("Order placed successfully!");
+      // localStorage.clear();
+    }
+  }
 }

@@ -31,7 +31,7 @@ export class BookDetailsComponent {
     this.route.paramMap.subscribe(params => {
       this.bookId = params.get('id');
     });
-
+  
     if (this.bookId) {
       this.bookService.fetchBookByIdApiCall(this.bookId).subscribe({
         next: (res: any) => {
@@ -42,7 +42,11 @@ export class BookDetailsComponent {
           this.image = res.data.bookImage;
           this.outOfStock = res.data.quantity === 0;
           this.book = res.data;
-          this.quantity = res.data.quantity;
+          this.quantity = res.quantity;
+  
+          this.dataService.wishlist$.subscribe((wishlist) => {
+            this.inWishlist = wishlist.some((item) => item._id === this.bookId);
+          });
         },
         error: (err) => {
           console.log(err);
@@ -56,8 +60,10 @@ export class BookDetailsComponent {
   }
 
   addToWishlist() {
-    this.inWishlist = true;
-    this.dataService.addToWishlist(this.book);
+    if (!this.inWishlist) {
+      this.dataService.addToWishlist(this.book);
+      this.inWishlist = true; 
+    }
   }
 
   inCart(): boolean {
@@ -75,5 +81,10 @@ export class BookDetailsComponent {
     if (this.bookId) {
       this.dataService.updateQuantity(this.bookId, change);
     }
+  }
+
+  toggleWishlist() {
+    this.dataService.addToWishlist(this.book);
+    this.inWishlist = !this.inWishlist;
   }
 }

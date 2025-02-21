@@ -18,10 +18,10 @@
             <button id="notify-btn" *ngIf="outOfStock">
                 NOTIFY ME
             </button>
-
-            <button id="wishlist-btn" (click)="addToWishlist()">
-                Wishlist
+            <button id="wishlist-btn" (click)="addToWishlist()" [disabled]="inWishlist">
+                <span class="heart-icon" [ngClass]="{ 'wishlist-active': inWishlist }">&#10084;</span> Wishlist
             </button>
+            
         </div> 
     </div>
 

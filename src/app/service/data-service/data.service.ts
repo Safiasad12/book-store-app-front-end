@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { CartService } from '../cart-service/cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,8 @@ export class DataService {
 
   private wishlist = new BehaviorSubject<any[]>([]);
   wishlist$ = this.wishlist.asObservable();
+
+  constructor(private cartService: CartService) { } 
 
   getCartItems(): any[] {
     return this.cartItems.getValue(); 
@@ -55,5 +58,17 @@ export class DataService {
   removeFromWishlist(bookId: string) {
     const updateWishlist = this.wishlist.getValue().filter(item => item._id !== bookId);
     this.wishlist.next(updateWishlist);
+  }
+
+  syncCartWithBackend() {
+    this.cartService.fetchCartListApiCall().subscribe({
+      next: (res) => {
+        this.updateCart(res.data?.books || []);
+      },
+      error: (err) => {
+        console.error('Failed to sync cart with backend:', err);
+        this.updateCart([]);  // Error aaye to empty cart set karna
+      }
+    });
   }
 }

@@ -17,7 +17,7 @@ nav p span{
 .cart-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: stretch;
     max-width: 800px;
     margin: auto;
     background: white;
@@ -26,6 +26,12 @@ nav p span{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: 1px solid black;
 }
+
+
+.cart-card{
+  padding-bottom: 30px;
+}
+
 
 
 .cart-card h2 {
@@ -83,16 +89,29 @@ nav p span{
 
 .cart-location {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
     font-size: 14px;
     color: #666;
+    // border: 1px solid black
 }
 
-.cart-location i {
-    margin-right: 5px;
+.place-order-btn {
+   display: flex;
+   flex-direction: row-reverse;
 }
 
-
+.place-order-btn button{
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 10px 0px;
+  width: 60%;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  font-size: 16px;
+}
 
 
 
@@ -373,3 +392,5 @@ h2 {
   padding: 5px 10px;
   border-radius: 3px;
 }
+
+

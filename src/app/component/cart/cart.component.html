@@ -10,7 +10,7 @@
       <div class="item-details">
         <h3>{{ item.bookName }}</h3>
         <p>by {{ item.author }}</p>
-        <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.oldPrice }}</span></p>
+        <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.price+item.discountPrice }}</span></p>
         <div class="quantity">
           <button (click)="decreaseQuantity(i)">-</button>
           <span>{{ item.quantity }}</span>
@@ -21,10 +21,14 @@
     </div>
   </div>
   <div class="cart-location">
-    <i class="fas fa-map-marker-alt"></i>
     <span>BridgeLabz Solutions LLP, No...</span>
+    <div class="place-order-btn">
+      <button (click)="placeOrder()">Place Order</button>
+    </div>
   </div>
 </div>
+
+
 
 
 

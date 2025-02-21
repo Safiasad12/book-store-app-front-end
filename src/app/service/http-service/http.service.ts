@@ -1,15 +1,18 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
- 
+import { Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor(private httpClient: HttpClient) { }
+  getApiCall<T>(url: string, header: any = {}): Observable<T> {
+    return this.httpClient.get<T>(url, { headers: header || {} });
+  }
 
- 
-  getApiCall(url: string, header: any = {}){
-    return this.httpClient.get(url, {headers: header})
+  postApiCall<T>(url: string, data: any, header: any = {}): Observable<T> {
+    return this.httpClient.post<T>(url, data, { headers: header || {} });
   }
 }
