@@ -19,4 +19,9 @@ export class DashboardComponent {
       this.router.navigate(['/dashboard/books']);
     } 
   }
+
+  handleLogOutBtnClick(){
+    localStorage.clear();
+    this.router.navigate(['']);
+  }
 }

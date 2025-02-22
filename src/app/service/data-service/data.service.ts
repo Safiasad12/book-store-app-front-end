@@ -28,7 +28,7 @@ export class DataService {
   }
 
 
-  getCartItems(): any[] {
+  getCartItems() {
     return this.cartItems.getValue(); 
   }
 
@@ -50,6 +50,7 @@ export class DataService {
   updateCart(updatedCart: any[]) {
     this.cartItems.next(updatedCart);
     this.saveCartToLocal(updatedCart);
+    console.log('updatedCart', updatedCart);
   }
 
   updateQuantity(bookId: string, change: number) {

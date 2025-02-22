@@ -81,9 +81,19 @@ export class CartComponent {
 
   placeOrder() {
     if (!this.authService.isLoggedIn()) {
-      this.dialog.open(LoginComponent, {
+      const dialogRef = this.dialog.open(LoginComponent, {
         width: '750px',
         disableClose: true,
+      });
+  
+      // ✅ Event listener for login success
+      dialogRef.componentInstance.loginSuccess.subscribe(() => {
+        console.log('Login successful, updating cart...');
+        this.updateCartAfterLogin();
+      });
+  
+      dialogRef.afterClosed().subscribe(() => {
+        console.log('Login dialog closed.');
       });
     } else {
       console.log("Order placed successfully!");
@@ -91,4 +101,19 @@ export class CartComponent {
       this.dataService.updateCart([]); 
     }
   }
+  
+  // ✅ Function to update cart after login
+  updateCartAfterLogin() {
+    this.cartService.fetchCartListApiCall().subscribe({
+      next: (cartRes) => {
+        console.log('Cart updated after login');
+        this.cartItems = cartRes.data?.books || [];
+        this.dataService.updateCart(this.cartItems);
+      },
+      error: (err) => {
+        console.error('Failed to fetch cart after login:', err);
+      }
+    });
+  }
+    
 }

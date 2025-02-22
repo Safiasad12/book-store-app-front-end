@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Optional, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/service/user-service/user.service';
 import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { DataService } from 'src/app/service/data-service/data.service';
 import { CartService } from 'src/app/service/cart-service/cart.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog'; 
 
 @Component({
   selector: 'app-login',
@@ -12,6 +12,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+  @Output() loginSuccess = new EventEmitter<void>(); 
+
   loginForm: FormGroup;
   signupForm: FormGroup;
   isLogin = true;
@@ -24,7 +26,7 @@ export class LoginComponent {
     private authService: AuthService,
     private dataService: DataService,
     private cartService: CartService,
-    private dialogRef: MatDialogRef<LoginComponent>
+    @Optional() public dialogRef: MatDialogRef<LoginComponent>
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -50,7 +52,6 @@ export class LoginComponent {
 
   onSubmit(formType: string) {
     this.submitted = true;
-
     if (formType === 'login' && this.loginForm.valid) {
       this.userService.userLoginApiCall(this.loginForm.value).subscribe({
         next: (res) => {
@@ -62,13 +63,16 @@ export class LoginComponent {
               const backendCart = cartRes.data?.books || [];
               const localCart = this.dataService.getCartItems();
               let updatedCart = this.mergeLocalIntoBackend(localCart, backendCart);
+
               if (updatedCart.length > 0) {
                 this.cartService.updateCartListApiCall(updatedCart).subscribe({
                   next: () => {
                     console.log('Backend cart updated successfully');
                     this.dataService.updateCart(backendCart.concat(updatedCart));
                     localStorage.removeItem('cartItems');
-                    this.dialogRef.close();
+
+                    this.loginSuccess.emit(); 
+                    this.closeDialog();
                   },
                   error: (updateErr) => {
                     console.error('Failed to update backend cart:', updateErr);
@@ -77,7 +81,8 @@ export class LoginComponent {
               } else {
                 console.log('No new books to update in backend');
                 this.dataService.updateCart(backendCart);
-                this.dialogRef.close();
+                this.loginSuccess.emit(); 
+                this.closeDialog();
               }
             },
             error: (fetchErr) => {
@@ -87,15 +92,6 @@ export class LoginComponent {
         },
         error: (err) => {
           console.error('Login failed', err);
-        }
-      });
-    } else if (formType === 'signup' && this.signupForm.valid) {
-      this.userService.userSignupApiCall(this.signupForm.value).subscribe({
-        next: (res) => {
-          console.log('Signup successful', res);
-        },
-        error: (err) => {
-          console.error('Signup failed', err);
         }
       });
     }
@@ -112,5 +108,12 @@ export class LoginComponent {
       }
     });
     return updatedCart;
+  }
+
+  closeDialog() {
+    console.log('Closing login dialog');
+    if (this.dialogRef) {  
+      this.dialogRef.close();
+    }
   }
 }
