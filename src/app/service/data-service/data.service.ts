@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CartService } from '../cart-service/cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +12,15 @@ export class DataService {
   private wishlist = new BehaviorSubject<any[]>([]);
   wishlist$ = this.wishlist.asObservable();
 
-  constructor() { } 
+  constructor() { 
+    this.loadCartFromLocalStorage();
+  } 
 
-  private getLocalCart(): any[] {
-    return JSON.parse(localStorage.getItem('cartItems') || '[]');
+  private loadCartFromLocalStorage() {
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      this.cartItems.next(JSON.parse(savedCart));   
+    }
   }
 
   private saveCartToLocal(cart: any[]) {
@@ -29,19 +33,18 @@ export class DataService {
   }
 
   addToCart(book: any) {
-    const currentCart = this.getCartItems();
-    
+    const currentCart = this.getCartItems();  
     if (!currentCart.find(item => item._id === book._id)) {
       currentCart.push({ ...book, quantity: 1 }); 
       this.cartItems.next([...currentCart]);
       this.saveCartToLocal(currentCart);
     }
-    console.log(this.cartItems.getValue())
   }
 
   removeFromCart(bookId: string) {
     const updatedCart = this.getCartItems().filter(item => item._id !== bookId);
     this.cartItems.next(updatedCart);
+    this.saveCartToLocal(updatedCart);
   }
 
   updateCart(updatedCart: any[]) {
@@ -72,4 +75,6 @@ export class DataService {
     const updateWishlist = this.wishlist.getValue().filter(item => item._id !== bookId);
     this.wishlist.next(updateWishlist);
   }
+
+ 
 }

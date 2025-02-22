@@ -24,7 +24,7 @@ export class LoginComponent {
     private authService: AuthService,
     private dataService: DataService,
     private cartService: CartService,
-    private dialogRef: MatDialogRef<LoginComponent> 
+    private dialogRef: MatDialogRef<LoginComponent>
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -56,39 +56,40 @@ export class LoginComponent {
         next: (res) => {
           console.log('Login successful', res);
           this.authService.setToken(res.accessToken);
+
           this.cartService.fetchCartListApiCall().subscribe({
             next: (cartRes) => {
               const backendCart = cartRes.data?.books || [];
               const localCart = this.dataService.getCartItems();
-  
-              // ✅ Merge both carts
-              console.log("this is local cart : ");
-              console.log(localCart);
-              console.log("---------");
-              console.log("this is backendCart");
-              console.log(backendCart);
-              const mergedCart = this.mergeCarts(localCart, backendCart);
-              this.cartService.updateCartListApiCall(mergedCart).subscribe(() => {
-                console.log('Backend cart updated successfully');
-             
-            });
-            this.dataService.updateCart(mergedCart);
-            localStorage.removeItem('cartItems');
-          },
-            error: (err) => {
-              console.error('Failed to fetch cart:', err);
-              this.dataService.updateCart([]); 
+              let updatedCart = this.mergeLocalIntoBackend(localCart, backendCart);
+              if (updatedCart.length > 0) {
+                this.cartService.updateCartListApiCall(updatedCart).subscribe({
+                  next: () => {
+                    console.log('Backend cart updated successfully');
+                    this.dataService.updateCart(backendCart.concat(updatedCart));
+                    localStorage.removeItem('cartItems');
+                    this.dialogRef.close();
+                  },
+                  error: (updateErr) => {
+                    console.error('Failed to update backend cart:', updateErr);
+                  }
+                });
+              } else {
+                console.log('No new books to update in backend');
+                this.dataService.updateCart(backendCart);
+                this.dialogRef.close();
+              }
+            },
+            error: (fetchErr) => {
+              console.error('Failed to fetch cart:', fetchErr);
             }
           });
-          this.dialogRef.close(); 
         },
         error: (err) => {
           console.error('Login failed', err);
         }
       });
-    }
-
-    else if (formType === 'signup' && this.signupForm.valid) {
+    } else if (formType === 'signup' && this.signupForm.valid) {
       this.userService.userSignupApiCall(this.signupForm.value).subscribe({
         next: (res) => {
           console.log('Signup successful', res);
@@ -100,20 +101,16 @@ export class LoginComponent {
     }
   }
 
-
-  mergeCarts(localCart: any[], backendCart: any[]): any[] {
-    const mergedCart = [...backendCart];
-  
+  mergeLocalIntoBackend(localCart: any[], backendCart: any[]): any[] {
+    const updatedCart: any[] = [];
     localCart.forEach(localItem => {
-      const existingItem = mergedCart.find(item => item.bookId === localItem._id);
+      const existingItem = backendCart.find(item => item.bookId === localItem._id);
       if (existingItem) {
-        existingItem.quantity += localItem.quantity; // Increase quantity if book already exists
+        existingItem.quantity += localItem.quantity;
       } else {
-        mergedCart.push(localItem); // Add new book
+        updatedCart.push(localItem);
       }
     });
-  
-    return mergedCart;
+    return updatedCart;
   }
-  
 }
