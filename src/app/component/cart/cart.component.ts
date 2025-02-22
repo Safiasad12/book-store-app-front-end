@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { DataService } from 'src/app/service/data-service/data.service';
 import { LoginComponent } from '../login/login.component';
 import { MatDialog } from '@angular/material/dialog';
+ 
 
 @Component({
   selector: 'app-cart',
@@ -25,7 +26,7 @@ export class CartComponent {
 
   
 
-  constructor(private dataService: DataService,  private authService: AuthService,  private dialog: MatDialog) { }
+  constructor(private dataService: DataService,  private authService: AuthService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.dataService.cartItems$.subscribe(items => {
@@ -80,7 +81,7 @@ export class CartComponent {
       });
     } else {
       console.log("Order placed successfully!");
-      // localStorage.clear();
+      localStorage.clear();
     }
   }
 }

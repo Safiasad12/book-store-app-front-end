@@ -13,7 +13,16 @@ export class DataService {
   private wishlist = new BehaviorSubject<any[]>([]);
   wishlist$ = this.wishlist.asObservable();
 
-  constructor(private cartService: CartService) { } 
+  constructor() { } 
+
+  private getLocalCart(): any[] {
+    return JSON.parse(localStorage.getItem('cartItems') || '[]');
+  }
+
+  private saveCartToLocal(cart: any[]) {
+    localStorage.setItem('cartItems', JSON.stringify(cart));
+  }
+
 
   getCartItems(): any[] {
     return this.cartItems.getValue(); 
@@ -21,10 +30,13 @@ export class DataService {
 
   addToCart(book: any) {
     const currentCart = this.getCartItems();
+    
     if (!currentCart.find(item => item._id === book._id)) {
       currentCart.push({ ...book, quantity: 1 }); 
       this.cartItems.next([...currentCart]);
+      this.saveCartToLocal(currentCart);
     }
+    console.log(this.cartItems.getValue())
   }
 
   removeFromCart(bookId: string) {
@@ -34,6 +46,7 @@ export class DataService {
 
   updateCart(updatedCart: any[]) {
     this.cartItems.next(updatedCart);
+    this.saveCartToLocal(updatedCart);
   }
 
   updateQuantity(bookId: string, change: number) {
@@ -58,17 +71,5 @@ export class DataService {
   removeFromWishlist(bookId: string) {
     const updateWishlist = this.wishlist.getValue().filter(item => item._id !== bookId);
     this.wishlist.next(updateWishlist);
-  }
-
-  syncCartWithBackend() {
-    this.cartService.fetchCartListApiCall().subscribe({
-      next: (res) => {
-        this.updateCart(res.data?.books || []);
-      },
-      error: (err) => {
-        console.error('Failed to sync cart with backend:', err);
-        this.updateCart([]);  // Error aaye to empty cart set karna
-      }
-    });
   }
 }

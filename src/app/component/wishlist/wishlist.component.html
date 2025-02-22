@@ -7,7 +7,7 @@
       <div class="book-info">
           <h3>{{ book.bookName }}</h3>
           <p>by {{ book.author }}</p>
-          <p><strong>Rs. {{ book.price }}</strong> <span class="original-price">Rs. {{ book.Price+book.discountPrice }}</span></p>
+          <p><strong>Rs. {{ book.price }}</strong> <span class="original-price">Rs. {{ book.price+book.discountPrice }}</span></p>
       </div>
 
       <button class="delete-btn" (click)="removeFromWishlist(i)">

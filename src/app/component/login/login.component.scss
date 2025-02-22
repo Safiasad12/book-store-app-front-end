@@ -169,22 +169,3 @@
   button{
     cursor: pointer;
   }
-
-  
-
-  ::ng-deep .success-snackbar, .error-snackbar {
-    text-align: center;
-    font-size: 14px;
-    padding: 10px;  
-    border: 1px solid black;
-   
-  }
-  
-  ::ng-deep .mat-mdc-snack-bar-container {
-    position: fixed !important; 
-    bottom: 20px !important;
-    transform: translateX(-50%);
-    z-index: 9999 !important; 
-    border: 1px solid black;
-  }
-  

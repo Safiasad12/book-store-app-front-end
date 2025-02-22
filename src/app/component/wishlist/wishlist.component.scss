@@ -1,21 +1,26 @@
 .wishlist-container {
     max-width: 800px;
     margin: auto;
-    padding: 20px;
+    border-bottom: 1px solid #ccc;
   }
   
   h2 {
     font-size: 24px;
     font-weight: bold;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-bottom: 0px;
   }
   
   .wishlist-item {
+    margin-top: 0px;
     display: flex;
     align-items: center;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-bottom: none;
   }
   
   .book-image {
