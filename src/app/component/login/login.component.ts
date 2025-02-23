@@ -102,7 +102,7 @@ export class LoginComponent {
     localCart.forEach(localItem => {
       const existingItem = backendCart.find(item => item.bookId === localItem._id);
       if (existingItem) {
-        existingItem.quantity += localItem.quantity;
+        existingItem.quantity += localItem.quantity; // yaha update quantity api call hoga
       } else {
         updatedCart.push(localItem);
       }

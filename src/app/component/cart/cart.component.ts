@@ -55,9 +55,24 @@ export class CartComponent {
   }
 
   removeItem(index: number) {
-    this.dataService.removeFromCart(this.cartItems[index]._id);
-    this.cartItems = this.cartItems.filter((_, i) => i !== index); 
+    const itemId = this.cartItems[index].bookId; 
+    if (this.authService.isLoggedIn()) {  
+      this.cartService.deleteCartItemApiCall(itemId).subscribe({
+        next: () => {
+          console.log('Item removed from backend');
+          this.cartItems = this.cartItems.filter((_, i) => i !== index); 
+          this.dataService.updateCart(this.cartItems);
+        },
+        error: (error: any) => {
+          console.error('Error removing item:', error);
+        }
+      });
+    } else {
+      this.dataService.removeFromCart(itemId);
+      this.cartItems = this.cartItems.filter((_, i) => i !== index); 
+    }
   }
+  
 
   toggleEdit(index: number) {
     if (this.isEditing[index] === undefined) {
@@ -86,7 +101,6 @@ export class CartComponent {
         disableClose: true,
       });
   
-      // ✅ Event listener for login success
       dialogRef.componentInstance.loginSuccess.subscribe(() => {
         console.log('Login successful, updating cart...');
         this.updateCartAfterLogin();
@@ -102,7 +116,7 @@ export class CartComponent {
     }
   }
   
-  // ✅ Function to update cart after login
+
   updateCartAfterLogin() {
     this.cartService.fetchCartListApiCall().subscribe({
       next: (cartRes) => {
