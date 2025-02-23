@@ -18,6 +18,7 @@ export class BookDetailsComponent {
   details: string = "";
   image: string = "";
   quantity: number = 1;
+  bookInCart: any = null; 
   inWishlist: boolean = false;
   outOfStock: boolean = false;
 
@@ -45,9 +46,15 @@ export class BookDetailsComponent {
           this.quantity = res.quantity;
   
           this.dataService.wishlist$.subscribe((wishlist) => {
-            this.inWishlist = wishlist.some((item) => item._id === this.bookId);
+            this.inWishlist = wishlist.some((item) => item.bookId === this.bookId);
           });
+
+          this.dataService.cartItems$.subscribe((cartItems: any[]) => {
+            this.bookInCart = cartItems.find((item: any) => item.bookId === this.bookId) || null;
+          });
+
         },
+
         error: (err) => {
           console.log(err);
         }
@@ -67,14 +74,12 @@ export class BookDetailsComponent {
   }
 
   inCart(): boolean {
-    if (!this.bookId) return false;
-    return this.dataService.getCartItems().some((item: any) => item._id === this.bookId);
+    return !!this.bookInCart; 
   }
 
+
   getCartQuantity(): number {
-    if (!this.bookId) return 0;
-    const bookInCart = this.dataService.getCartItems().find((item: any) => item._id === this.bookId);
-    return bookInCart ? bookInCart.quantity : 0;
+    return this.bookInCart ? this.bookInCart.quantity : 0;
   }
 
   updateQuantity(change: number) {
