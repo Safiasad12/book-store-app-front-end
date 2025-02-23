@@ -9,10 +9,9 @@ export class CartService {
 
   constructor(private httpService: HttpService) { }
 
-
-  fetchCartListApiCall(): Observable<{ data: { books: any[] } }>{
+  fetchCartListApiCall(): Observable<{ data: { books: any[] } }> {
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-    return this.httpService.getApiCall(`http://localhost:3000/api/v1/cart/`, headers)
+    return this.httpService.getApiCall(`http://localhost:3000/api/v1/cart/`, headers);
   }
 
   updateCartListApiCall(updatedCart: any[]): Observable<{ data: { books: any[] } }> {
@@ -26,5 +25,3 @@ export class CartService {
   }
   
 }
-
-

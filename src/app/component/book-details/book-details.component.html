@@ -1,13 +1,13 @@
 <div class="book-details-cnt">
     <div class="left-cnt">
         <div class="img-cnt">
-            <img [src]="image" alt="{{name}}">
+            <img [src]="book.bookImage" alt="{{ book.name }}">
         </div>
 
         <div class="cart-wishlist-cnt">
             <button id="add-cart-btn" *ngIf="!inCart() && !outOfStock" (click)="addToCart()">
-                ADD TO BAG
-            </button>
+                Add to Bag
+              </button>
 
             <div class="update-cart-btn" *ngIf="inCart()">
                 <button (click)="updateQuantity(-1)">-</button>
@@ -18,27 +18,27 @@
             <button id="notify-btn" *ngIf="outOfStock">
                 NOTIFY ME
             </button>
-            <button id="wishlist-btn" (click)="addToWishlist()" [disabled]="inWishlist">
+
+            <button id="wishlist-btn" (click)="toggleWishlist()" [disabled]="inWishlist">
                 <span class="heart-icon" [ngClass]="{ 'wishlist-active': inWishlist }">&#10084;</span> Wishlist
             </button>
-            
         </div> 
     </div>
 
     <div class="right-cnt">
-        <p id="book-name">{{ name }}</p>
-        <p id="book-author">{{ author }}</p>
+        <p id="book-name">{{ book.name }}</p>
+        <p id="book-author">{{ book.author }}</p>
 
         <p id="book-ratings">
             <span class="rating-number">4.5</span> 
             <span class="star">&#9733;</span>
         </p>
 
-        <p id="book-price">₹{{ price }}</p> 
+        <p id="book-price">₹{{ book.price }}</p> 
 
         <div class="book-detail">
             <p id="book-detail-heading">Book Detail</p>
-            <p id="book-detail-summary">{{ details }}</p>
+            <p id="book-detail-summary">{{ book.details }}</p>
         </div>
     </div>
 </div>

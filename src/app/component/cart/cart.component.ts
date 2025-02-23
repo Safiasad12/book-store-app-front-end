@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { DataService } from 'src/app/service/data-service/data.service';
 import { LoginComponent } from '../login/login.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CartService } from 'src/app/service/cart-service/cart.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -15,8 +17,11 @@ export class CartComponent {
   isEditing: boolean[] = [];
   savedAddresses: any[] = [];
   addingNewAddress: boolean = false;
+  private unsubscribe$ = new Subject<void>();
+
   homeAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
   workAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
+
   newAddress = {
     address: '',
     city: '',
@@ -24,15 +29,30 @@ export class CartComponent {
     type: '',
   };
 
-  constructor(private dataService: DataService, private authService: AuthService, private dialog: MatDialog, private cartService: CartService) { }
+  constructor(
+    private dataService: DataService,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private cartService: CartService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.cartItems = this.dataService.getCartItems(); 
-  
+    this.dataService.cartItems$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(cartItems => {
+        this.cartItems = cartItems;
+        this.cdRef.detectChanges();  
+      });
+
+    this.loadSavedAddresses();  
+    this.fetchCartFromBackend();
+  }
+
+  fetchCartFromBackend() {
     this.cartService.fetchCartListApiCall().subscribe({
       next: (cartRes) => {
-        this.cartItems = cartRes.data?.books || [];
-        this.dataService.updateCart(this.cartItems); 
+        this.dataService.setCartFromBackend(cartRes.data?.books || []);
       },
       error: (err) => {
         console.error('Failed to fetch cart:', err);
@@ -41,43 +61,35 @@ export class CartComponent {
   }
 
   increaseQuantity(index: number) {
-    this.cartItems[index].quantity++;
-    this.dataService.updateCart(this.cartItems);
-    this.cartItems = [...this.cartItems]; 
+    const bookId = this.cartItems[index].bookId;
+    this.dataService.updateQuantity(bookId, 1);
   }
 
   decreaseQuantity(index: number) {
-    if (this.cartItems[index].quantity > 1) {
-      this.cartItems[index].quantity--;
-      this.dataService.updateCart(this.cartItems);
-      this.cartItems = [...this.cartItems]; 
-    }
+    const bookId = this.cartItems[index].bookId;
+    this.dataService.updateQuantity(bookId, -1);
   }
 
   removeItem(index: number) {
-    const itemId = this.cartItems[index].bookId; 
+    const bookId = this.cartItems[index].bookId;
+
     if (this.authService.isLoggedIn()) {  
-      this.cartService.deleteCartItemApiCall(itemId).subscribe({
+      this.cartService.deleteCartItemApiCall(bookId).subscribe({
         next: () => {
-          console.log('Item removed from backend');
-          this.cartItems = this.cartItems.filter((_, i) => i !== index); 
-          this.dataService.updateCart(this.cartItems);
+          this.dataService.removeFromCart(bookId);
+          this.cdRef.detectChanges(); 
         },
         error: (error: any) => {
           console.error('Error removing item:', error);
         }
       });
     } else {
-      this.dataService.removeFromCart(itemId);
-      this.cartItems = this.cartItems.filter((_, i) => i !== index); 
+      this.dataService.removeFromCart(bookId);
+      this.cdRef.detectChanges(); 
     }
   }
-  
 
   toggleEdit(index: number) {
-    if (this.isEditing[index] === undefined) {
-      this.isEditing[index] = false;
-    }
     this.isEditing[index] = !this.isEditing[index];
   }
 
@@ -89,6 +101,7 @@ export class CartComponent {
     if (this.newAddress.address.trim() !== '') {
       this.savedAddresses.push({ ...this.newAddress });
       this.isEditing.push(false);
+      this.saveAddressesToLocalStorage();  
       this.newAddress.address = '';
       this.addingNewAddress = false;
     }
@@ -100,34 +113,36 @@ export class CartComponent {
         width: '750px',
         disableClose: true,
       });
-  
+
       dialogRef.componentInstance.loginSuccess.subscribe(() => {
-        console.log('Login successful, updating cart...');
         this.updateCartAfterLogin();
       });
-  
-      dialogRef.afterClosed().subscribe(() => {
-        console.log('Login dialog closed.');
-      });
+
     } else {
       console.log("Order placed successfully!");
       localStorage.removeItem('cartItems'); 
-      this.dataService.updateCart([]); 
+      this.dataService.updateCart([]);  
+      this.cdRef.detectChanges();  
     }
   }
-  
 
   updateCartAfterLogin() {
-    this.cartService.fetchCartListApiCall().subscribe({
-      next: (cartRes) => {
-        console.log('Cart updated after login');
-        this.cartItems = cartRes.data?.books || [];
-        this.dataService.updateCart(this.cartItems);
-      },
-      error: (err) => {
-        console.error('Failed to fetch cart after login:', err);
-      }
-    });
+    this.fetchCartFromBackend();
   }
-    
+
+
+  private loadSavedAddresses() {
+    const saved = localStorage.getItem('savedAddresses');
+    this.savedAddresses = saved ? JSON.parse(saved) : [];
+  }
+
+
+  private saveAddressesToLocalStorage() {
+    localStorage.setItem('savedAddresses', JSON.stringify(this.savedAddresses));
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

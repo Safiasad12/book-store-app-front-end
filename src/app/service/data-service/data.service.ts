@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-
   private cartItems = new BehaviorSubject<any[]>([]);
   cartItems$ = this.cartItems.asObservable();
 
@@ -14,8 +13,10 @@ export class DataService {
 
   constructor() { 
     this.loadCartFromLocalStorage();
+    this.loadWishlistFromLocalStorage();
   } 
 
+ 
   private loadCartFromLocalStorage() {
     const savedCart = localStorage.getItem('cartItems');
     if (savedCart) {
@@ -23,39 +24,66 @@ export class DataService {
     }
   }
 
+
+  private loadWishlistFromLocalStorage() {
+    const savedWishlist = localStorage.getItem('wishlistItems');
+    if (savedWishlist) {
+      this.wishlist.next(JSON.parse(savedWishlist));   
+    }
+  }
+
   private saveCartToLocal(cart: any[]) {
     localStorage.setItem('cartItems', JSON.stringify(cart));
   }
 
-
-  getCartItems() {
-    return this.cartItems.getValue(); 
+  private saveWishlistToLocal(wishlist: any[]) {
+    localStorage.setItem('wishlistItems', JSON.stringify(wishlist));
   }
 
   addToCart(book: any) {
-    const currentCart = this.getCartItems();  
-    if (!currentCart.find(item => item._id === book._id)) {
-      currentCart.push({ ...book, quantity: 1 }); 
-      this.cartItems.next([...currentCart]);
-      this.saveCartToLocal(currentCart);
+    console.log("Before Adding - cartItems", this.cartItems.getValue());
+    const currentCart = this.getCartItems();
+
+    let cartBook = currentCart.find(item => item.bookId === book._id);
+
+    if (!cartBook) {
+        const updatedCart = [...currentCart, { 
+            ...book, 
+            bookId: book._id,  
+            quantity: 1 
+        }];
+
+        this.cartItems.next(updatedCart);  
+        this.saveCartToLocal(updatedCart);
+
+        console.log("After Adding - cartItems", this.cartItems.getValue());
+    } else {
+        console.warn("Book already in cart!", cartBook);
     }
   }
 
+  getCartItems() {
+    console.log('cartItems->', this.cartItems.getValue());
+    return this.cartItems.getValue(); 
+  }
+
   removeFromCart(bookId: string) {
-    const updatedCart = this.getCartItems().filter(item => item._id !== bookId);
+    const updatedCart = this.getCartItems().filter(item => item.bookId !== bookId);
     this.cartItems.next(updatedCart);
     this.saveCartToLocal(updatedCart);
   }
 
   updateCart(updatedCart: any[]) {
+    console.log("cartItems=>", this.cartItems.getValue());
     this.cartItems.next(updatedCart);
     this.saveCartToLocal(updatedCart);
     console.log('updatedCart', updatedCart);
   }
 
+  
   updateQuantity(bookId: string, change: number) {
     let updatedCart = this.getCartItems().map(item => {
-      if (item._id === bookId) {
+      if (item.bookId === bookId) {
         return { ...item, quantity: item.quantity + change };
       }
       return item;
@@ -64,18 +92,30 @@ export class DataService {
     this.updateCart(updatedCart);
   }
 
+  // ✅ Add to Wishlist (Fixed duplication issue)
   addToWishlist(book: any) {
     const currentWishlist = this.wishlist.getValue();
-    if (!currentWishlist.find(item => item._id === book._id)) {
-      currentWishlist.push({ ...book });
-      this.wishlist.next([...currentWishlist]);
+    
+    if (!currentWishlist.some(item => item.bookId === book._id)) {
+      const newWishlist = [...currentWishlist, { ...book, bookId: book._id }];
+      this.wishlist.next(newWishlist);
+      this.saveWishlistToLocal(newWishlist);
     }
   }
 
   removeFromWishlist(bookId: string) {
-    const updateWishlist = this.wishlist.getValue().filter(item => item._id !== bookId);
+    const updateWishlist = this.wishlist.getValue().filter(item => item.bookId !== bookId);
     this.wishlist.next(updateWishlist);
+    this.saveWishlistToLocal(updateWishlist);
   }
 
- 
+  isInWishlist(bookId: string): boolean {
+    return this.wishlist.getValue().some(item => item.bookId === bookId);
+  }
+
+  setCartFromBackend(cartData: any[]) {
+    console.log("Setting cart from backend", cartData);
+    this.cartItems.next([...cartData]);  
+    this.saveCartToLocal(cartData);
+  }
 }
