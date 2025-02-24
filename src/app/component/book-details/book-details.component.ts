@@ -2,7 +2,7 @@ import { Component, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { BookService } from 'src/app/service/book-service/book.service';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/service/data-service/data.service';
-import { AuthService } from 'src/app/service/auth-service/auth.service'; // ✅ AuthService added
+import { AuthService } from 'src/app/service/auth-service/auth.service'; 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CartService } from 'src/app/service/cart-service/cart.service';
@@ -25,8 +25,8 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     private bookService: BookService,
     private route: ActivatedRoute,
     private dataService: DataService,
-    private cartService: CartService, // ✅ Inject CartService
-    private authService: AuthService, // ✅ Inject AuthService
+    private cartService: CartService, 
+    private authService: AuthService, 
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -65,12 +65,12 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     if (this.book && !this.outOfStock) {
       if (this.authService.isLoggedIn()) {
        
-        const updatedCart = [{ _id: this.book._id, quantity: 1 }]; // ✅ Correct payload structure
+        const updatedCart = [{ _id: this.book._id, quantity: 1 }]; 
   
         this.cartService.updateCartListApiCall(updatedCart).subscribe({
           next: (res: any) => {
             console.log("Added to cart:", res);
-            this.dataService.addToCart(res.data.books); // ✅ Update cart state
+            this.dataService.addToCart(this.book); 
             this.cdRef.detectChanges();
           },
           error: (err) => console.error("Error adding to cart:", err)
@@ -102,27 +102,27 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateQuantity(change: number) {
-    if (this.bookId) { // ✅ Ensure this.bookId is not null
+    if (this.bookId !== null) { 
       if (this.authService.isLoggedIn()) {
-        const updatedQuantity = (this.bookInCart?.quantity || 0) + change;
-        if (updatedQuantity < 1) return; 
-  
-        const updatedCart = [{ bookId: this.bookId, quantity: updatedQuantity }];
-  
-        this.cartService.updateCartListApiCall(updatedCart).subscribe({
+        this.cartService.updateBookQuantityApiCall(this.bookId, change).subscribe({
           next: (res: any) => {
-            console.log("Cart updated successfully:", res);
-            this.dataService.addToCart(res.data.books);
+            console.log("Quantity updated successfully:", res);
+            this.dataService.updateQuantity(this.bookId as string, change); 
             this.cdRef.detectChanges();
           },
-          error: (err) => console.error("Error updating cart:", err)
+          error: (err) => console.error("Error updating quantity:", err)
         });
+  
       } else {
-        this.dataService.updateQuantity(this.bookId, change);
+        this.dataService.updateQuantity(this.bookId as string, change);
         this.cdRef.detectChanges();
       }
+    } else {
+      console.error("Error: bookId is null, cannot update quantity.");
     }
   }
+  
+  
   
 
   inCart(): boolean {

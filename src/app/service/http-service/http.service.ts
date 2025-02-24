@@ -19,4 +19,8 @@ export class HttpService {
   deleteApiCall<T>(url: string, header: any = {}): Observable<T> {
     return this.httpClient.delete<T>(url, { headers: header || {} });
   }
+
+  putApiCall<T>(url: string, data: any, header: any = {}): Observable<T> {
+    return this.httpClient.put<T>(url, data, { headers: header || {} });
+  }
 }

@@ -60,15 +60,29 @@ export class CartComponent {
     });
   }
 
-  increaseQuantity(index: number) {
+  updateQuantity(index: number, change: number) {
     const bookId = this.cartItems[index].bookId;
-    this.dataService.updateQuantity(bookId, 1);
+  
+    if (bookId !== null) { 
+      if (this.authService.isLoggedIn()) {
+        this.cartService.updateBookQuantityApiCall(bookId, change).subscribe({
+          next: (res: any) => {
+            console.log("Quantity updated successfully:", res);
+            this.dataService.updateQuantity(bookId, change); 
+            this.cdRef.detectChanges();
+          },
+          error: (err) => console.error("Error updating quantity:", err)
+        });
+  
+      } else {
+        this.dataService.updateQuantity(bookId, change);
+        this.cdRef.detectChanges();
+      }
+    } else {
+      console.error("Error: bookId is null, cannot update quantity.");
+    }
   }
-
-  decreaseQuantity(index: number) {
-    const bookId = this.cartItems[index].bookId;
-    this.dataService.updateQuantity(bookId, -1);
-  }
+  
 
   removeItem(index: number) {
     const bookId = this.cartItems[index].bookId;

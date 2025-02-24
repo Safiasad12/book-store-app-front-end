@@ -23,5 +23,10 @@ export class CartService {
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
     return this.httpService.deleteApiCall(`http://localhost:3000/api/v1/cart/${itemId}`, headers);
   }
+
+  updateBookQuantityApiCall(bookId: string, change: number): Observable<any> {
+    const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+    return this.httpService.putApiCall(`http://localhost:3000/api/v1/cart/${bookId}`, { "quantityChange": change}, headers);
+  }
   
 }

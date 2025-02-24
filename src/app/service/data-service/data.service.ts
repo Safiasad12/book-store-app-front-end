@@ -92,7 +92,6 @@ export class DataService {
     this.updateCart(updatedCart);
   }
 
-  // ✅ Add to Wishlist (Fixed duplication issue)
   addToWishlist(book: any) {
     const currentWishlist = this.wishlist.getValue();
     

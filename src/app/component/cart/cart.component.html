@@ -12,9 +12,9 @@
         <p>by {{ item.author }}</p>
         <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.price+item.discountPrice }}</span></p>
         <div class="quantity">
-          <button (click)="decreaseQuantity(i)">-</button>
+          <button (click)="updateQuantity(i, -1)">-</button>
           <span>{{ item.quantity }}</span>
-          <button (click)="increaseQuantity(i)">+</button>
+          <button (click)="updateQuantity(i, 1)">+</button>
           <button class="remove" (click)="removeItem(i)">Remove</button>
         </div>
       </div>
