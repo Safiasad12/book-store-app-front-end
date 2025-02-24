@@ -99,16 +99,26 @@ export class LoginComponent {
 
   mergeLocalIntoBackend(localCart: any[], backendCart: any[]): any[] {
     const updatedCart: any[] = [];
+    
     localCart.forEach(localItem => {
       const existingItem = backendCart.find(item => item.bookId === localItem._id);
+      
       if (existingItem) {
-        existingItem.quantity += localItem.quantity; // yaha update quantity api call hoga
+        this.cartService.updateBookQuantityApiCall(existingItem.bookId, localItem.quantity).subscribe({
+          next: () => {
+            console.log(`Quantity updated for ${existingItem.bookId}`);
+            this.dataService.updateQuantity(existingItem.bookId, localItem.quantity);
+          },
+          error: (err) => console.error(`Failed to update quantity for ${existingItem.bookId}:`, err)
+        });
       } else {
         updatedCart.push(localItem);
       }
     });
+  
     return updatedCart;
   }
+  
 
   closeDialog() {
     console.log('Closing login dialog');
