@@ -24,4 +24,8 @@ export class DashboardComponent {
     localStorage.clear();
     this.router.navigate(['']);
   }
+
+  navigateToWishlist(){
+    this.router.navigate(['/dashboard/wishlist']);
+  }
 }

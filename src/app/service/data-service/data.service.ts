@@ -16,14 +16,12 @@ export class DataService {
     this.loadWishlistFromLocalStorage();
   } 
 
- 
   private loadCartFromLocalStorage() {
     const savedCart = localStorage.getItem('cartItems');
     if (savedCart) {
       this.cartItems.next(JSON.parse(savedCart));   
     }
   }
-
 
   private loadWishlistFromLocalStorage() {
     const savedWishlist = localStorage.getItem('wishlistItems');
@@ -41,9 +39,7 @@ export class DataService {
   }
 
   addToCart(book: any) {
-    console.log("Before Adding - cartItems", this.cartItems.getValue());
     const currentCart = this.getCartItems();
-
     let cartBook = currentCart.find(item => item.bookId === book._id);
 
     if (!cartBook) {
@@ -55,15 +51,10 @@ export class DataService {
 
         this.cartItems.next(updatedCart);  
         this.saveCartToLocal(updatedCart);
-
-        console.log("After Adding - cartItems", this.cartItems.getValue());
-    } else {
-        console.warn("Book already in cart!", cartBook);
     }
   }
 
   getCartItems() {
-    console.log('cartItems->', this.cartItems.getValue());
     return this.cartItems.getValue(); 
   }
 
@@ -74,13 +65,10 @@ export class DataService {
   }
 
   updateCart(updatedCart: any[]) {
-    console.log("cartItems=>", this.cartItems.getValue());
     this.cartItems.next(updatedCart);
     this.saveCartToLocal(updatedCart);
-    console.log('updatedCart', updatedCart);
   }
 
-  
   updateQuantity(bookId: string, change: number) {
     let updatedCart = this.getCartItems().map(item => {
       if (item.bookId === bookId) {
@@ -113,8 +101,16 @@ export class DataService {
   }
 
   setCartFromBackend(cartData: any[]) {
-    console.log("Setting cart from backend", cartData);
     this.cartItems.next([...cartData]);  
     this.saveCartToLocal(cartData);
+  }
+
+  getWishlistItems() {
+    return this.wishlist.getValue();
+  }
+
+  updateWishlist(updatedWishlist: any[]) {
+    this.wishlist.next(updatedWishlist);
+    this.saveWishlistToLocal(updatedWishlist);
   }
 }

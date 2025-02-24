@@ -4,7 +4,9 @@ import { UserService } from 'src/app/service/user-service/user.service';
 import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { DataService } from 'src/app/service/data-service/data.service';
 import { CartService } from 'src/app/service/cart-service/cart.service';
+import { WishlistService } from 'src/app/service/wishlist-service/wishlist.service';
 import { MatDialogRef } from '@angular/material/dialog'; 
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,7 @@ export class LoginComponent {
     private authService: AuthService,
     private dataService: DataService,
     private cartService: CartService,
+    private wishlistService: WishlistService,
     @Optional() public dialogRef: MatDialogRef<LoginComponent>
   ) {
     this.loginForm = this.fb.group({
@@ -58,41 +61,46 @@ export class LoginComponent {
           console.log('Login successful', res);
           this.authService.setToken(res.accessToken);
 
-          this.cartService.fetchCartListApiCall().subscribe({
-            next: (cartRes) => {
-              const backendCart = cartRes.data?.books || [];
+          forkJoin({
+            cart: this.cartService.fetchCartListApiCall(),
+            wishlist: this.wishlistService.fetchWishListApiCall()
+          }).subscribe({
+            next: ({ cart, wishlist }) => {
+              const backendCart = cart.data?.books || [];
               const localCart = this.dataService.getCartItems();
               let updatedCart = this.mergeLocalIntoBackend(localCart, backendCart);
 
-              if (updatedCart.length > 0) {
-                this.cartService.updateCartListApiCall(updatedCart).subscribe({
-                  next: () => {
-                    console.log('Backend cart updated successfully');
-                    this.dataService.updateCart(backendCart.concat(updatedCart));
-                    localStorage.removeItem('cartItems');
+              const backendWishlist = wishlist.data?.books || [];
+              const localWishlist = this.dataService.getWishlistItems();
+              let updatedWishlist = this.mergeLocalIntoBackendWishlist(localWishlist, backendWishlist);
 
-                    this.loginSuccess.emit(); 
-                    this.closeDialog();
-                  },
-                  error: (updateErr) => {
-                    console.error('Failed to update backend cart:', updateErr);
-                  }
-                });
-              } else {
-                console.log('No new books to update in backend');
-                this.dataService.updateCart(backendCart);
-                this.loginSuccess.emit(); 
-                this.closeDialog();
+              const apiCalls = [];
+              if (updatedCart.length > 0) {
+                apiCalls.push(this.cartService.updateCartListApiCall(updatedCart));
               }
+              if (updatedWishlist.length > 0) {
+                apiCalls.push(this.wishlistService.updateWishListApiCall(updatedWishlist));
+              }
+
+              forkJoin(apiCalls).subscribe({
+                next: () => {
+                  console.log('Cart & Wishlist updated successfully');
+                  this.dataService.updateCart([...backendCart, ...updatedCart]);
+                  this.dataService.updateWishlist([...backendWishlist, ...updatedWishlist]);
+
+                  localStorage.removeItem('cartItems');
+                  localStorage.removeItem('wishlistItems');
+
+                  this.loginSuccess.emit();
+                  this.closeDialog();
+                },
+                error: (err) => console.error('Error updating cart/wishlist:', err)
+              });
             },
-            error: (fetchErr) => {
-              console.error('Failed to fetch cart:', fetchErr);
-            }
+            error: (fetchErr) => console.error('Failed to fetch cart/wishlist:', fetchErr)
           });
         },
-        error: (err) => {
-          console.error('Login failed', err);
-        }
+        error: (err) => console.error('Login failed', err)
       });
     }
   }
@@ -118,7 +126,20 @@ export class LoginComponent {
   
     return updatedCart;
   }
-  
+
+  mergeLocalIntoBackendWishlist(localWishlist: any[], backendWishlist: any[]): any[] {
+    const updatedWishlist: any[] = [];
+
+    localWishlist.forEach(localItem => {
+      const existsInBackend = backendWishlist.some(book => book.bookId === localItem._id);
+
+      if (!existsInBackend) {
+        updatedWishlist.push(localItem);
+      }
+    });
+
+    return updatedWishlist;
+  }
 
   closeDialog() {
     console.log('Closing login dialog');
