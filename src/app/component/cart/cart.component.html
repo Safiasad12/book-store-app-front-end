@@ -38,7 +38,7 @@
 
 
 
-<div class="customer-details">
+<div class="customer-details" *ngIf="showCustomerDetails">
 
   <div class="customer-header">
     <h2>Customer Details</h2>
@@ -63,9 +63,11 @@
       <div *ngFor="let address of savedAddresses; let i = index" class="address-card">
         <input type="radio" name="address" checked />
         <label>{{ i + 1 }}. <b>{{ address.type.toUpperCase() }}</b></label>
-        <button class="edit-btn" (click)="toggleEdit(i)" [ngClass]="{ 'blue-btn': isEditing[i] }">
+        <!-- <button class="edit-btn" (click)="toggleEdit(i)" [ngClass]="{ 'blue-btn': isEditing[i] }">
           {{ isEditing[i] ? 'Save' : 'Edit' }}
-        </button>
+        </button> -->
+        <button class="edit-btn" (click)="toggleEdit(i)" *ngIf="!isEditing[i]">Edit</button>
+        <button class="save-btn" (click)="updateAddress(savedAddresses[i])" (click)="toggleEdit(i)" *ngIf="isEditing[i]">Save</button>
         <ng-container *ngIf="isEditing[i]; else viewMode">
           <textarea [(ngModel)]="savedAddresses[i].address"></textarea>
           <div class="customer-info">
@@ -81,7 +83,7 @@
         </ng-container>
 
         <ng-template #viewMode>
-          <p>{{ address.address + ", " + address.city + ", " + address.state}}</p>
+          <p id="address-str">{{ address.address + ", " + address.city + ", " + address.state}}</p>
         </ng-template>
       </div>
     </div>
@@ -130,7 +132,7 @@
 
 
 
-
+<!-- 
 
 <div class="order-summary">
   <h2>Order summary</h2>
@@ -149,4 +151,4 @@
   <div class="checkout-btn">
     <button>CHECKOUT</button>
   </div>
-</div>
+</div> -->

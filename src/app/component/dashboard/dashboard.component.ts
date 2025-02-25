@@ -13,8 +13,10 @@ export class DashboardComponent {
 
   handleDashBoardBtnClick(action: string){
     if(action==="cart"){
+      if(localStorage.getItem('cartItems')){
       this.router.navigate(['/dashboard/cart']);
     }
+  }
     if(action==="book"){
       this.router.navigate(['/dashboard/books']);
     } 

@@ -182,8 +182,11 @@ nav p span{
         border: none;
         background-color: transparent;
       }
-      .blue-btn {
+      .save-btn {
         color: blue;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
       }
 
 
@@ -239,6 +242,10 @@ nav p span{
   }
 }
 
+
+#address-str{
+  padding-left: 37px;
+}
 
 
 
@@ -393,4 +400,9 @@ h2 {
   border-radius: 3px;
 }
 
+#update-save-btn{
+  color: #1976d2;
+  border: none;
+  background-color: transparent;
+}
 

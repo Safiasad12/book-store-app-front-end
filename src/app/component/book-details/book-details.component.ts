@@ -64,8 +64,8 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   addToCart() {
     if (this.book && !this.outOfStock) {
       if (this.authService.isLoggedIn()) {
-       
-        const updatedCart = [{ _id: this.book._id, quantity: 1 }]; 
+       console.log("abc");
+        const updatedCart = [{ bookId: this.book._id, quantity: 1 }]; 
   
         this.cartService.updateCartListApiCall(updatedCart).subscribe({
           next: (res: any) => {

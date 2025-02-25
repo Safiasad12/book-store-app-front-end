@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CartService } from 'src/app/service/cart-service/cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { CustomerDetailsService } from 'src/app/service/customer-details-service/customer-details.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,6 +18,7 @@ export class CartComponent {
   isEditing: boolean[] = [];
   savedAddresses: any[] = [];
   addingNewAddress: boolean = false;
+  showCustomerDetails: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
   homeAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
@@ -29,11 +31,20 @@ export class CartComponent {
     type: '',
   };
 
+  existingAddress = {
+    addressId: '',
+    address: '',
+    city: '',
+    state: '',
+    type: '',
+  };
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
     private dialog: MatDialog,
     private cartService: CartService,
+    private customerDetailsService: CustomerDetailsService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -103,9 +114,18 @@ export class CartComponent {
     }
   }
 
+  // toggleEdit(index: number) {
+  //   this.isEditing[index] = !this.isEditing[index];
+  // }
+
   toggleEdit(index: number) {
-    this.isEditing[index] = !this.isEditing[index];
+    if (this.isEditing[index]) { 
+      // 🔹 Jab "Save" button click hoga, tab API call hogi
+      this.updateAddress(this.savedAddresses[index]);
+    }
+    this.isEditing[index] = !this.isEditing[index]; // Mode toggle ho raha hai
   }
+  
 
   toggleAddNewAddress() {
     this.addingNewAddress = !this.addingNewAddress;
@@ -113,13 +133,97 @@ export class CartComponent {
 
   saveNewAddress() {
     if (this.newAddress.address.trim() !== '') {
-      this.savedAddresses.push({ ...this.newAddress });
-      this.isEditing.push(false);
-      this.saveAddressesToLocalStorage();  
-      this.newAddress.address = '';
-      this.addingNewAddress = false;
+      this.customerDetailsService.addNewAddress(this.newAddress).subscribe({
+        next: (response) => {
+          console.log('Address added successfully:', response);
+  
+          this.savedAddresses.push({ ...this.newAddress });
+          this.isEditing.push(false);
+          this.saveAddressesToLocalStorage(); 
+  
+          this.newAddress = { address: '', city: '', state: '', type: '' };
+          this.addingNewAddress = false;
+        },
+        error: (err) => {
+          console.error('Failed to add address:', err);
+        }
+      });
     }
   }
+
+
+  updateAddress(address: any) {
+    console.log(this.savedAddresses);
+    if (!address._id) {
+      console.error("Error: Address ID missing!");
+      return;
+    }
+  
+    this.customerDetailsService.updateAddress(address).subscribe({
+      next: (response) => {
+        console.log('Address updated successfully:', response);
+        
+        const index = this.savedAddresses.findIndex(addr => addr.addressId === address.addressId);
+        if (index !== -1) {
+          this.savedAddresses[index] = { ...address };
+        }
+  
+        this.saveAddressesToLocalStorage();
+      },
+      error: (err) => {
+        console.error('Failed to update address:', err);
+      }
+    });
+  }
+  
+
+
+
+  // saveAddress() {
+  //   if (this.existingAddress.addressId.trim() !== '') {  
+  //     // 🔹 Address ID hai → Update API Call
+  //     this.customerDetailsService.updateAddress(this.existingAddress).subscribe({
+  //       next: (response) => {
+  //         console.log('Address updated successfully:', response);
+  
+  //         // 🔹 List mein existing address update karo
+  //         const index = this.savedAddresses.findIndex(addr => addr.addressId === this.existingAddress.addressId);
+  //         if (index !== -1) {
+  //           this.savedAddresses[index] = { ...this.existingAddress };
+  //         }
+  
+  //         this.saveAddressesToLocalStorage();
+  //         this.existingAddress = { addressId: '', address: '', city: '', state: '', type: '' };
+  //         this.addingNewAddress = false;
+  //       },
+  //       error: (err) => {
+  //         console.error('Failed to update address:', err);
+  //       }
+  //     });
+  
+  //   } else if (this.newAddress.address.trim() !== '') {  
+  //     // 🔹 Address ID nahi hai → Add API Call
+  //     this.customerDetailsService.addNewAddress(this.newAddress).subscribe({
+  //       next: (response) => {
+  //         console.log('Address added successfully:', response);
+  
+  //         this.savedAddresses.push({ ...this.newAddress });
+  //         this.isEditing.push(false);
+  //         this.saveAddressesToLocalStorage(); 
+  
+  //         this.newAddress = { address: '', city: '', state: '', type: '' };
+  //         this.addingNewAddress = false;
+  //       },
+  //       error: (err) => {
+  //         console.error('Failed to add address:', err);
+  //       }
+  //     });
+  //   } else {
+  //     console.error("Address fields are empty!");
+  //   }
+ // }
+  
+  
 
   placeOrder() {
     if (!this.authService.isLoggedIn()) {
@@ -133,10 +237,25 @@ export class CartComponent {
       });
 
     } else {
-      console.log("Order placed successfully!");
-      localStorage.removeItem('cartItems'); 
-      this.dataService.updateCart([]);  
-      this.cdRef.detectChanges();  
+      console.log("Fetching customer details...");
+      
+      this.customerDetailsService.getCustomerDetails().subscribe({
+        next: (res) => {
+          console.log("Customer details fetched successfully:", res);
+  
+          // Update saved addresses with the fetched customer addresses
+          if (res.address && res.address.length > 0) {
+            this.savedAddresses = res.address;
+            this.saveAddressesToLocalStorage();  
+          }
+  
+          this.showCustomerDetails = true;
+          this.cdRef.detectChanges();
+        },
+        error: (error) => {
+          console.error("Failed to fetch customer details:", error);
+        }
+      });
     }
   }
 
@@ -154,6 +273,8 @@ export class CartComponent {
   private saveAddressesToLocalStorage() {
     localStorage.setItem('savedAddresses', JSON.stringify(this.savedAddresses));
   }
+
+
 
   ngOnDestroy() {
     this.unsubscribe$.next();
