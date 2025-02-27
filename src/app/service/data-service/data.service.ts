@@ -25,6 +25,7 @@ export class DataService {
 
   private loadWishlistFromLocalStorage() {
     const savedWishlist = localStorage.getItem('wishlistItems');
+    
     if (savedWishlist) {
       this.wishlist.next(JSON.parse(savedWishlist));   
     }

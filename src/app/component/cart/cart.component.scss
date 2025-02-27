@@ -48,6 +48,7 @@ nav p span{
     width: 80px;
     height: auto;
     margin-right: 15px;
+   
 }
 
 .item-details h3 {
@@ -264,7 +265,7 @@ nav p span{
   
   .order-content {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 15px;
   }
   

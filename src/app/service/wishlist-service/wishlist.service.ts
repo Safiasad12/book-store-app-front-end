@@ -10,13 +10,21 @@ export class WishlistService {
   constructor(private httpService: HttpService) { }
 
 
-  updateWishListApiCall(updatedWishlist: any[]): Observable<{ data: { books: any[] } }> {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-      return this.httpService.postApiCall(`http://localhost:3000/api/v1/wishlist/`, { bookIds: updatedWishlist }, headers);
-    }
+  addToWishListApiCall(id: string){
+    const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+    console.log("123")
+    return this.httpService.postApiCall(`http://localhost:3000/api/v1/wishlist/${id}`, {}, headers);
+   
+  }
 
     fetchWishListApiCall(): Observable<{ data: { books: any[] } }> {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
       return this.httpService.getApiCall(`http://localhost:3000/api/v1/wishlist/`, headers);
     }
+
+    deleteBookFromWishListApiCall(id: string) {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      return this.httpService.deleteApiCall(`http://localhost:3000/api/v1/wishlist/${id}`, headers);
+    }
 }
+ 

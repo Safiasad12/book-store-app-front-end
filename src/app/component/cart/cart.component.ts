@@ -19,6 +19,7 @@ export class CartComponent {
   savedAddresses: any[] = [];
   addingNewAddress: boolean = false;
   showCustomerDetails: boolean = false;
+  showOrderSummary: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
   homeAddress: string = "BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore";
@@ -114,16 +115,12 @@ export class CartComponent {
     }
   }
 
-  // toggleEdit(index: number) {
-  //   this.isEditing[index] = !this.isEditing[index];
-  // }
 
   toggleEdit(index: number) {
     if (this.isEditing[index]) { 
-      // 🔹 Jab "Save" button click hoga, tab API call hogi
       this.updateAddress(this.savedAddresses[index]);
     }
-    this.isEditing[index] = !this.isEditing[index]; // Mode toggle ho raha hai
+    this.isEditing[index] = !this.isEditing[index]; 
   }
   
 
@@ -176,52 +173,6 @@ export class CartComponent {
     });
   }
   
-
-
-
-  // saveAddress() {
-  //   if (this.existingAddress.addressId.trim() !== '') {  
-  //     // 🔹 Address ID hai → Update API Call
-  //     this.customerDetailsService.updateAddress(this.existingAddress).subscribe({
-  //       next: (response) => {
-  //         console.log('Address updated successfully:', response);
-  
-  //         // 🔹 List mein existing address update karo
-  //         const index = this.savedAddresses.findIndex(addr => addr.addressId === this.existingAddress.addressId);
-  //         if (index !== -1) {
-  //           this.savedAddresses[index] = { ...this.existingAddress };
-  //         }
-  
-  //         this.saveAddressesToLocalStorage();
-  //         this.existingAddress = { addressId: '', address: '', city: '', state: '', type: '' };
-  //         this.addingNewAddress = false;
-  //       },
-  //       error: (err) => {
-  //         console.error('Failed to update address:', err);
-  //       }
-  //     });
-  
-  //   } else if (this.newAddress.address.trim() !== '') {  
-  //     // 🔹 Address ID nahi hai → Add API Call
-  //     this.customerDetailsService.addNewAddress(this.newAddress).subscribe({
-  //       next: (response) => {
-  //         console.log('Address added successfully:', response);
-  
-  //         this.savedAddresses.push({ ...this.newAddress });
-  //         this.isEditing.push(false);
-  //         this.saveAddressesToLocalStorage(); 
-  
-  //         this.newAddress = { address: '', city: '', state: '', type: '' };
-  //         this.addingNewAddress = false;
-  //       },
-  //       error: (err) => {
-  //         console.error('Failed to add address:', err);
-  //       }
-  //     });
-  //   } else {
-  //     console.error("Address fields are empty!");
-  //   }
- // }
   
   
 
@@ -234,6 +185,8 @@ export class CartComponent {
 
       dialogRef.componentInstance.loginSuccess.subscribe(() => {
         this.updateCartAfterLogin();
+        this.showCustomerDetails = true;
+        
       });
 
     } else {
@@ -243,7 +196,6 @@ export class CartComponent {
         next: (res) => {
           console.log("Customer details fetched successfully:", res);
   
-          // Update saved addresses with the fetched customer addresses
           if (res.address && res.address.length > 0) {
             this.savedAddresses = res.address;
             this.saveAddressesToLocalStorage();  
@@ -275,6 +227,9 @@ export class CartComponent {
   }
 
 
+  confirmAddress() {
+    this.showOrderSummary = true;
+  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();

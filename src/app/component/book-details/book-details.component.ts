@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CartService } from 'src/app/service/cart-service/cart.service';
+import { WishlistService } from 'src/app/service/wishlist-service/wishlist.service';
 
 @Component({
   selector: 'app-book-details',
@@ -27,6 +28,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private cartService: CartService, 
     private authService: AuthService, 
+    private wishlistService: WishlistService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -44,6 +46,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.dataService.wishlist$.pipe(takeUntil(this.unsubscribe$)).subscribe(wishlist => {
+      console.log("Wishlist updated:", wishlist);
       this.inWishlist = wishlist.some(item => item._id === this.bookId);
       this.cdRef.detectChanges();
     });
@@ -83,19 +86,49 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     }
   }
   
-  
+
+
+
+
 
   toggleWishlist() {
-    if (this.book) {
-      this.inWishlist = !this.inWishlist;
-      if (this.inWishlist) {
-        this.dataService.addToWishlist(this.book);
-      } else {
-        this.dataService.removeFromWishlist(this.book._id);
-      }
-      this.cdRef.detectChanges();
+    if (!this.book) return;
+  
+    if (this.inWishlist) {
+      this.wishlistService.deleteBookFromWishListApiCall(this.book._id).subscribe({
+        next: () => {
+          console.log("Book removed from wishlist");
+          this.inWishlist = false;
+          this.dataService.removeFromWishlist(this.book._id); 
+          this.cdRef.detectChanges();
+        },
+        error: (error) => {
+          console.error("Error removing from wishlist:", error);
+        }
+      });
+    } else {
+      this.wishlistService.addToWishListApiCall(this.book._id).subscribe({
+        next: () => {
+          console.log("Book added to wishlist");
+          this.inWishlist = true;
+          this.dataService.addToWishlist(this.book); 
+          this.cdRef.detectChanges();
+        },
+        error: (error) => {
+          console.error("Error adding to wishlist:", error);
+        }
+      });
     }
   }
+  
+
+
+
+
+  
+  
+
+  
 
   getCartQuantity(): number {
     return this.bookInCart ? this.bookInCart.quantity : 0;

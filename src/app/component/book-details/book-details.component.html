@@ -26,19 +26,18 @@
     </div>
 
     <div class="right-cnt">
-        <p id="book-name">{{ book.name }}</p>
+        <p id="book-name">{{ book.bookName }}</p>
         <p id="book-author">{{ book.author }}</p>
 
         <p id="book-ratings">
             <span class="rating-number">4.5</span> 
             <span class="star">&#9733;</span>
         </p>
-
         <p id="book-price">₹{{ book.price }}</p> 
 
         <div class="book-detail">
             <p id="book-detail-heading">Book Detail</p>
-            <p id="book-detail-summary">{{ book.details }}</p>
+            <p id="book-detail-summary">{{ book.description }}</p>
         </div>
     </div>
 </div>

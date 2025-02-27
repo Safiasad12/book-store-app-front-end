@@ -116,7 +116,7 @@
     </div>
 
     <div class="continue-btn">
-      <button>CONTINUE</button>
+      <button (click)="confirmAddress()">CONTINUE</button>
     </div>
 
   </div>
@@ -132,12 +132,10 @@
 
 
 
-<!-- 
-
-<div class="order-summary">
+<div class="order-summary" *ngIf="showOrderSummary">
   <h2>Order summary</h2>
   <div class="order-content">
-    <img src="assets/book-cover.jpg" alt="Book Image" class="book-image" />
+    <!-- <img src="assets/book-cover.jpg" alt="Book Image" class="book-image" />
 
     <div class="order-details">
       <p class="book-title">Don't Make Me Think</p>
@@ -147,8 +145,22 @@
         <span class="old-price">Rs. 2000</span>
       </p>
     </div>
+  </div> -->
+  <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+    <img [src]="item.bookImage" [alt]="item.title">
+    <div class="item-details">
+      <h3>{{ item.bookName }}</h3>
+      <p>by {{ item.author }}</p>
+      <p class="price">Rs. {{ item.price }} <span class="old-price">Rs. {{ item.price+item.discountPrice }}</span></p>
+      <div class="quantity">
+        <button (click)="updateQuantity(i, -1)">-</button>
+        <span>{{ item.quantity }}</span>
+        <button (click)="updateQuantity(i, 1)">+</button>
+        <button class="remove" (click)="removeItem(i)">Remove</button>
+      </div>
+    </div>
   </div>
   <div class="checkout-btn">
     <button>CHECKOUT</button>
   </div>
-</div> -->
+</div> 
