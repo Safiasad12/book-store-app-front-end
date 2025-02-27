@@ -79,11 +79,11 @@ export class LoginComponent {
                   error: (err) => console.error('Error updating cart:', err)
                 });
               } else {
+                this.loginSuccess.emit();
                 this.closeDialog();
               }
             },
             error: (fetchErr) => {
-              console.log("abc");
               console.error('Failed to fetch cart:', fetchErr);
             } 
           });

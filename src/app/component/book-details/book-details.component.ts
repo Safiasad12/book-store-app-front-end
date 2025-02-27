@@ -7,6 +7,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CartService } from 'src/app/service/cart-service/cart.service';
 import { WishlistService } from 'src/app/service/wishlist-service/wishlist.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../login/login.component';
+
 
 @Component({
   selector: 'app-book-details',
@@ -29,6 +32,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     private cartService: CartService, 
     private authService: AuthService, 
     private wishlistService: WishlistService,
+    private dialog: MatDialog,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -67,7 +71,6 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   addToCart() {
     if (this.book && !this.outOfStock) {
       if (this.authService.isLoggedIn()) {
-       console.log("abc");
         const updatedCart = [{ bookId: this.book._id, quantity: 1 }]; 
   
         this.cartService.updateCartListApiCall(updatedCart).subscribe({
@@ -91,35 +94,31 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
 
 
+
+
   toggleWishlist() {
+    console.log("jscfjesbv");
+    if (!this.authService.isLoggedIn()) {
+      this.openLoginDialog();
+      console.log("dialog open")
+      return;
+    }
+  
     if (!this.book) return;
   
-    if (this.inWishlist) {
-      this.wishlistService.deleteBookFromWishListApiCall(this.book._id).subscribe({
-        next: () => {
-          console.log("Book removed from wishlist");
-          this.inWishlist = false;
-          this.dataService.removeFromWishlist(this.book._id); 
-          this.cdRef.detectChanges();
-        },
-        error: (error) => {
-          console.error("Error removing from wishlist:", error);
-        }
-      });
-    } else {
-      this.wishlistService.addToWishListApiCall(this.book._id).subscribe({
-        next: () => {
-          console.log("Book added to wishlist");
-          this.inWishlist = true;
-          this.dataService.addToWishlist(this.book); 
-          this.cdRef.detectChanges();
-        },
-        error: (error) => {
-          console.error("Error adding to wishlist:", error);
-        }
-      });
-    }
+    this.wishlistService.addToWishListApiCall(this.book._id).subscribe({
+      next: () => {
+        console.log("Book added to wishlist");
+        this.inWishlist = true;
+        this.dataService.addToWishlist(this.book);
+        this.cdRef.detectChanges();
+      },
+      error: (error) => {
+        console.error("Error adding to wishlist:", error);
+      }
+    });
   }
+  
   
 
 
@@ -161,6 +160,28 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   inCart(): boolean {
     return !!this.bookInCart;
   }
+
+
+
+
+
+  openLoginDialog() {
+    const dialogRef = this.dialog.open(LoginComponent, {
+      width: '750px'
+    });
+
+    console.log(dialogRef.componentInstance);
+  
+    dialogRef.componentInstance.loginSuccess.subscribe(() => {
+      console.log("User logged in, calling toggleWishlist...");
+      this.toggleWishlist(); 
+    });
+  }
+
+
+  
+
+  
 
   ngOnDestroy() {
     this.unsubscribe$.next();
