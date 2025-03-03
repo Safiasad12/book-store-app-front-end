@@ -1,5 +1,6 @@
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/service/data-service/data.service';
 import { WishlistService } from 'src/app/service/wishlist-service/wishlist.service';
 
@@ -9,42 +10,34 @@ import { WishlistService } from 'src/app/service/wishlist-service/wishlist.servi
   styleUrls: ['./wishlist.component.scss']
 })
 export class WishlistComponent implements OnInit {
-  
-  wishlist: any[] = [];
 
-  constructor(private wishlistService: WishlistService, private dataService: DataService) {}
+  wishlist: any[] = [];
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(private wishlistService: WishlistService,
+    private dataService: DataService,
+    private cdRef: ChangeDetectorRef,
+  ) { }
 
   ngOnInit(): void {
-    this.fetchWishlist();
-  }
-
-  fetchWishlist() {
-    this.wishlistService.fetchWishListApiCall().subscribe({
-      next: (response) => {
-        if (response?.data?.books) {
-          this.wishlist = response.data.books;  
-          this.dataService.updateWishlist(this.wishlist);
-          console.log("Wishlist fetched successfully", this.wishlist);
-        } else {
-          console.error("Unexpected API response structure:", response);
-        }
-      },
-      error: (error) => {
-        console.error("Error fetching wishlist", error);
-      }
-    });
+    this.dataService.wishlist$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(wishlist => {
+        this.wishlist = wishlist;
+        this.cdRef.detectChanges();
+      });
   }
 
   removeFromWishlist(index: number) {
     const bookId = this.wishlist[index].bookId;
 
     this.wishlistService.deleteBookFromWishListApiCall(bookId).subscribe({
-      next: () => { 
+      next: () => {
         console.log(`Book removed from wishlist: ${bookId}`);
-        
+
         this.wishlist.splice(index, 1);
       },
-      error: (error) => { 
+      error: (error) => {
         console.error("Error removing book from wishlist", error);
       }
     });

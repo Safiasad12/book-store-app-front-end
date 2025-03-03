@@ -12,7 +12,6 @@ export class WishlistService {
 
   addToWishListApiCall(id: string){
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-    console.log("123")
     return this.httpService.postApiCall(`http://localhost:3000/api/v1/wishlist/${id}`, {}, headers);
    
   }

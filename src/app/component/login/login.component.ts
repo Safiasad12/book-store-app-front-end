@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/service/auth-service/auth.service';
 import { DataService } from 'src/app/service/data-service/data.service';
 import { CartService } from 'src/app/service/cart-service/cart.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { WishlistService } from 'src/app/service/wishlist-service/wishlist.service';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent {
     private authService: AuthService,
     private dataService: DataService,
     private cartService: CartService,
+    private wishlistService: WishlistService,
     @Optional() public dialogRef: MatDialogRef<LoginComponent>
   ) {
     this.loginForm = this.fb.group({
@@ -58,62 +60,66 @@ export class LoginComponent {
           console.log('Login successful', res);
           this.authService.setToken(res.accessToken);
 
-          this.cartService.fetchCartListApiCall().subscribe({
-            next: (cart) => {
-              
-              const backendCart = cart.data?.books || [];
               const localCart = this.dataService.getCartItems();
+              const localWishlist = this.dataService.getWishlistItems();
+              console.log("local wishlist: ", localWishlist);
 
-              let updatedCart = this.mergeLocalIntoBackend(localCart, backendCart);
-
-              if (updatedCart.length > 0) {
-                this.cartService.updateCartListApiCall(updatedCart).subscribe({
-                  next: () => {
+              if (localCart.length > 0) {
+                this.cartService.updateCartListApiCall(localCart).subscribe({
+                  next: (res) => {
                     console.log('Cart updated successfully');
-                    this.dataService.updateCart([...backendCart, ...updatedCart]);
+                    this.dataService.updateCart(res.data.books);
 
-                    localStorage.removeItem('cartItems');
                     this.loginSuccess.emit();
                     this.closeDialog();
                   },
                   error: (err) => console.error('Error updating cart:', err)
                 });
               } else {
+                this.fetchCartFromBackend();
                 this.loginSuccess.emit();
                 this.closeDialog();
               }
+
+
+            this.fetchWishlistFromBackend();
+
             },
             error: (fetchErr) => {
               console.error('Failed to fetch cart:', fetchErr);
             } 
           });
-        },
-        error: (err) => console.error('Login failed', err)
-      });
+          
     }
   }
 
-  mergeLocalIntoBackend(localCart: any[], backendCart: any[]): any[] {
-    console.log("Local Cart:", localCart);
-    console.log("Backend Cart:", backendCart);
-    const updatedCart: any[] = [];
 
-    localCart.forEach(localItem => {
-      const existingItem = backendCart.find(item => item.bookId === localItem._id);
-
-      if (existingItem) {
-        this.cartService.updateBookQuantityApiCall(existingItem.bookId, localItem.quantity).subscribe({
-          next: () => {
-            console.log(`Quantity updated for ${existingItem.bookId}`);
-            this.dataService.updateQuantity(existingItem.bookId, localItem.quantity);
-          },
-          error: (err) => console.error(`Failed to update quantity for ${existingItem.bookId}:`, err)
-        });
+  fetchCartFromBackend() {
+    this.cartService.fetchCartListApiCall().subscribe({
+      next: (cartRes) => {
+        this.dataService.updateCart(cartRes.data?.books || []);
+      },
+      error: (err) => {
+        console.error('Failed to fetch cart:', err);
       }
-      updatedCart.push(localItem);
     });
+  }
 
-    return updatedCart;
+
+  fetchWishlistFromBackend() {
+    this.wishlistService.fetchWishListApiCall().subscribe({
+      next: (res) => {
+        console.log("res=", res);
+        if (res?.data?.books) {  
+          this.dataService.updateWishlist(res.data.books);
+        } else {
+          console.error("Unexpected API response structure:", res);
+        }
+      },
+      error: (error) => {
+        console.error("Error fetching wishlist", error);
+      }
+    });
   }
 
   closeDialog() {

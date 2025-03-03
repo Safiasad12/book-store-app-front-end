@@ -47,7 +47,7 @@ export class CartComponent {
     private cartService: CartService,
     private customerDetailsService: CustomerDetailsService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.dataService.cartItems$
@@ -58,19 +58,19 @@ export class CartComponent {
       });
 
     this.loadSavedAddresses();  
-    this.fetchCartFromBackend();
+    // this.fetchCartFromBackend();
   }
 
-  fetchCartFromBackend() {
-    this.cartService.fetchCartListApiCall().subscribe({
-      next: (cartRes) => {
-        this.dataService.setCartFromBackend(cartRes.data?.books || []);
-      },
-      error: (err) => {
-        console.error('Failed to fetch cart:', err);
-      }
-    });
-  }
+  // fetchCartFromBackend() {
+  //   this.cartService.fetchCartListApiCall().subscribe({
+  //     next: (cartRes) => {
+  //       this.dataService.setCartFromBackend(cartRes.data?.books || []);
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to fetch cart:', err);
+  //     }
+  //   });
+  // }
 
   updateQuantity(index: number, change: number) {
     const bookId = this.cartItems[index].bookId;
@@ -184,7 +184,7 @@ export class CartComponent {
       });
 
       dialogRef.componentInstance.loginSuccess.subscribe(() => {
-        this.updateCartAfterLogin();
+        // this.updateCartAfterLogin();
         this.showCustomerDetails = true;
         
       });
@@ -211,9 +211,9 @@ export class CartComponent {
     }
   }
 
-  updateCartAfterLogin() {
-    this.fetchCartFromBackend();
-  }
+  // updateCartAfterLogin() {
+  //   this.fetchCartFromBackend();
+  // }
 
 
   private loadSavedAddresses() {
@@ -236,3 +236,13 @@ export class CartComponent {
     this.unsubscribe$.complete();
   }
 }
+
+
+
+
+
+
+
+
+
+

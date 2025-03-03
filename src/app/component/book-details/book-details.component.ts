@@ -101,6 +101,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     if (!this.authService.isLoggedIn()) {
       this.openLoginDialog();
       console.log("dialog open")
+      this.dataService.addToWishlist(this.book);
       return;
     }
   
